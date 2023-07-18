@@ -12,7 +12,7 @@ import {
 } from "sequelize-typescript";
 import Contact from "./Contact";
 import Ticket from "./Ticket";
-import Template from "./Template";
+
 @Table
 class Message extends Model<Message> {
   @PrimaryKey
@@ -37,8 +37,9 @@ class Message extends Model<Message> {
   @Column(DataType.STRING)
   get mediaUrl(): string | null {
     if (this.getDataValue("mediaUrl")) {
-      return `${process.env.BACKEND_URL}:${process.env.PROXY_PORT
-        }/public/${this.getDataValue("mediaUrl")}`;
+      return `${process.env.BACKEND_URL}:${
+        process.env.PROXY_PORT
+      }/public/${this.getDataValue("mediaUrl")}`;
     }
     return null;
   }
@@ -78,13 +79,6 @@ class Message extends Model<Message> {
 
   @BelongsTo(() => Contact, "contactId")
   contact: Contact;
-
-  @ForeignKey(() => Template)
-  @Column
-  templateId: number
-
-  @BelongsTo(() => Template, "templateId")
-  template: Template
 }
 
 export default Message;
