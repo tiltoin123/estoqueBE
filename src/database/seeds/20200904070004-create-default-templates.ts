@@ -8,10 +8,10 @@ module.exports = {
                 {
                     id: 1,
                     message: "Olá, a Imobiliária Fábio Liporoni agradece o contato, envie a opção desejada para prosseguirmos com o seu atendimento\n" +
-                        "1- Comprar imóveis tratar com Gabriela\n" +
-                        "2- Vender imóveis tratar com Gabriela\n" +
-                        "3- Setor de finanças, (atraso, antecipação ou extravio de boletos) tratar com Débora\n" +
-                        "4- Setor jurídico, renegociação e cessão de direitos",
+                        "1- Comprar\n" +
+                        "2- Vender\n" +
+                        "3- Financeiro\n" +
+                        "4- Jurídico",
                     lastMessage: 0,
                     queueId: 1
                 },
@@ -40,6 +40,12 @@ module.exports = {
                     condition: "2 dois segunda vender venda vende",
                     nextMessage: 4
                 },
+                { id: 22, message: "Você está buscando um imóvel em qual faixa de valor?\n" +
+                "1- Acima de R$1 milhão \n" +
+                "2- 500 mil até 1 milhão\n" +
+                "3- 265 mil até 500 mil\n" +
+                "4- Abaixo de 265 Mil", lastMessage: 2 },
+                { id: 23, message: "Em quais regiões da cidade ou bairros são suas preferências? Digite abaixo", lastMessage: 22 },
                 { id: 4, message: "Qual a metragem do imóvel?", lastMessage: 3, condition: "1 um primeira chácara chacara 3 terceira tres três terreno", nextMessage: 6 },
                 { id: 5, message: "Qual a área construída do imóvel?", lastMessage: 3, condition: "2 ap apartamento segunda dois casa 4 quatro quarta", nextMessage: 6 },
                 { id: 6, message: "Qual a localização do imóvel?", lastMessage: 5 },
@@ -70,7 +76,7 @@ module.exports = {
                         "3- Cessão de direto de imóvel adquirido.",
                     lastMessage: 14
                 },
-                { id: 17, message: "Obrigado pela cooperação, a Gabriela do setor de vendas recebeu um relatório sobre o que você precisa e retornará seu contato o quanto antes.", lastMessage: 2, queueId: 2 },
+                { id: 17, message: "Obrigado pela cooperação, a Gabriela do setor de vendas recebeu um relatório sobre o que você precisa e retornará seu contato o quanto antes.", lastMessage: 23, queueId: 2 },
                 { id: 18, message: "Obrigado pela cooperação, a Gabriela do setor de compras recebeu um relatório sobre o que você precisa e retornará seu contato o quanto antes.", lastMessage: 8, queueId: 3 },
                 { id: 19, message: "Obrigado pela cooperação, a Débora do setor de finanças recebeu um relatório sobre o que você precisa e retornará seu contato o quanto antes.", lastMessage: 11, queueId: 4 },
                 { id: 20, message: "Obrigado pela cooperação, a Ângela do setor de jurídico recebeu um relatório sobre o que você precisa e retornará seu contato o quanto antes.", lastMessage: 15, condition: " 1 renegociacao renegociação renegociaçao renegociacão iniciar processo 2", queueId: 5 },
