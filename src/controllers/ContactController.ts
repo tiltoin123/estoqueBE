@@ -49,6 +49,9 @@ export const index = async (req: Request, res: Response): Promise<Response> => {
 export const getContact = async (req: Request, res: Response): Promise<Response> => {
   const { name, number } = req.body as IndexGetContactQuery;
 
+  const { id, storeId } = req.user;
+
+
   const contact = await GetContactService({
     name,
     number

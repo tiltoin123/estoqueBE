@@ -4,6 +4,7 @@ import User from "../../models/User";
 import Whatsapp from "../../models/Whatsapp";
 
 interface Request {
+  storeId: number
   searchParam?: string;
   pageNumber?: string | number;
 }
@@ -15,21 +16,27 @@ interface Response {
 }
 
 const ListUsersService = async ({
+  storeId,
   searchParam = "",
   pageNumber = "1"
 }: Request): Promise<Response> => {
-  const whereCondition = {
-    [Op.or]: [
+  const whereCondition =  {
+    [Op.and]: [
       {
-        "$User.name$": Sequelize.where(
-          Sequelize.fn("LOWER", Sequelize.col("User.name")),
-          "LIKE",
-          `%${searchParam.toLowerCase()}%`
-        )
+        [Op.or]: [
+          {
+            "$User.name$": Sequelize.where(
+              Sequelize.fn("LOWER", Sequelize.col("User.name")),
+              "LIKE",
+              `%${searchParam.toLowerCase()}%`
+            )
+          },
+          { email: { [Op.like]: `%${searchParam.toLowerCase()}%` } }
+        ]
       },
-      { email: { [Op.like]: `%${searchParam.toLowerCase()}%` } }
+      { storeId: storeId }
     ]
-  };
+  };;
   const limit = 20;
   const offset = limit * (+pageNumber - 1);
 
