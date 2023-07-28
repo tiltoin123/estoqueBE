@@ -1,16 +1,16 @@
-import Templates from "../../models/Template";
+import Template from "../../models/Template";
 import AppError from "../../errors/AppError";
 
-const ListTemplatesService = async (): Promise<Templates[]> => {
-    const templates = await Templates.findAll({
+const ListTemplatesService = async (): Promise<Template[]> => {
+    const template = await Template.findAll({
         attributes: ["id", "message", "lastMessage", "nextMessage", "condition", "queueId"],
     });
 
-    if (!templates) {
+    if (!template) {
         throw new AppError("ERR_NO_TEMPLATES_FOUND", 404);
     }
 
-    return templates;
+    return template;
 };
 
 export default ListTemplatesService;

@@ -20,6 +20,7 @@ import Ticket from "./Ticket";
 import Queue from "./Queue";
 import UserQueue from "./UserQueue";
 import Whatsapp from "./Whatsapp";
+import Store from "./Stores";
 
 @Table
 class User extends Model<User> {
@@ -66,6 +67,13 @@ class User extends Model<User> {
 
   @BelongsToMany(() => Queue, () => UserQueue)
   queues: Queue[];
+
+  @ForeignKey(() => Store)
+  @Column
+  storeId: number;
+
+  @BelongsTo(() => Store)
+  store: Store
 
   @BeforeUpdate
   @BeforeCreate

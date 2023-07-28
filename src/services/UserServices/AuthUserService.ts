@@ -13,6 +13,7 @@ interface SerializedUser {
   email: string;
   profile: string;
   queues: Queue[];
+  storeId: number;
 }
 
 interface Request {
@@ -47,7 +48,8 @@ const AuthUserService = async ({
   const refreshToken = createRefreshToken(user);
 
   const serializedUser = SerializeUser(user);
-
+  console.log("AuthUserService linha 51 user.storeId:", user.storeId)
+  console.log("AuthUserService linha 51 serializedUser.storeId:", serializedUser.storeId)
   return {
     serializedUser,
     token,

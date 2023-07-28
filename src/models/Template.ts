@@ -8,9 +8,10 @@ import {
     BelongsTo,
 } from "sequelize-typescript";
 import Queue from "./Queue";
+import Store from "./Stores";
 
 @Table
-class Templates extends Model<Templates> {
+class Template extends Model<Template> {
     @PrimaryKey
     @Column({ type: DataType.INTEGER })
     id: number;
@@ -33,6 +34,13 @@ class Templates extends Model<Templates> {
 
     @BelongsTo(() => Queue)
     queue: Queue;
+
+    @ForeignKey(() => Store)
+    @Column
+    storeId: number;
+
+    @BelongsTo(() => Store)
+    store: Store
 }
 
-export default Templates;
+export default Template;

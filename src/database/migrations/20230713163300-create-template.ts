@@ -2,7 +2,7 @@ import { QueryInterface, DataTypes } from "sequelize";
 
 module.exports = {
     up: async (queryInterface: QueryInterface) => {
-        await queryInterface.createTable("Templates", {
+        await queryInterface.createTable("Template", {
             id: {
                 type: DataTypes.INTEGER,
                 primaryKey: true,
@@ -34,6 +34,6 @@ module.exports = {
     },
 
     down: async (queryInterface: QueryInterface) => {
-        await queryInterface.dropTable("Templates");
+        await queryInterface.dropTable("Template");
     }
 };
