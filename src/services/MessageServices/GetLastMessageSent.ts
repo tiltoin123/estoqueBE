@@ -6,7 +6,7 @@ const GetLastMessageSent = async (contact: Contact): Promise<Message | null> => 
         const lastMessage = await Message.findOne({
             where: {
                 storeId: contact.storeId,
-                contactId: contact.id,
+                to: contact.number,
                 fromMe: 1
             },
             order: [["createdAt", "DESC"]],
