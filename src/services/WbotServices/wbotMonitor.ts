@@ -54,7 +54,7 @@ const wbotMonitor = async (
       });
     });
     wbot.on("message", async () => {
-      console.log("$%&¨&(¨&*(%¨&#$%%¨(*", wbot.info)
+      //console.log("$%&¨&(¨&*(%¨&#$%%¨(*", wbot.info)
     });
     wbot.on("disconnected", async reason => {
       logger.info(`Disconnected session: ${sessionName}, reason: ${reason}`);

@@ -7,7 +7,7 @@ const GetLastMessageReceived = async (contact: Contact): Promise<Message | null>
         const lastMessage = await Message.findOne({
             where: {
                 storeId: contact.storeId,
-                Id: contact.id,
+                contactId: contact.id,
                 fromMe: 0
             },
             order: [["createdAt", "DESC"]],
@@ -15,7 +15,7 @@ const GetLastMessageReceived = async (contact: Contact): Promise<Message | null>
 
         return lastMessage;
     } catch (error) {
-        console.error("Error retrieving last message:", error);
+        console.error("Error retrieving last message received:", error);
         throw error;
     }
 };

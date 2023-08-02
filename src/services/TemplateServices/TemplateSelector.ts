@@ -7,34 +7,31 @@ import ShowTemplatesService from "./ShowTemplatesService"
 const templateSelector = async (contact: Contact) => {
 
     let lastReceivedMessage = await GetLastMessageReceived(contact)
-    let lastSentMessage = await GetLastMessageSent(contact)
     let templates = await ListTemplatesService(contact.storeId)
-    console.log("templates", templates)
+    let lastSentMessage = await GetLastMessageSent(contact)
     let lastSentTemplate = await ShowTemplatesService(lastSentMessage ? lastSentMessage.templateId : 1)
-
-    console.log("last Sent Message", lastSentMessage?.templateId)
+    //console.log("ultima recebida", lastReceivedMessage?.body)
+    //console.log("contact", contact.id, contact.storeId)
+    //console.log("lastSentMessage", lastSentMessage)
+    console.log(contact)
+    console.log("last Sent template", lastSentMessage?.body)
     if (lastReceivedMessage && lastSentMessage) {
-        console.log("passou o primeiro if do templateSelector")
         for (let i = 0; i < templates.length; i++) {
             let testTemplate = templates[i];
             let currentCondition = testTemplate.condition ? testTemplate.condition : false;
             let words = lastReceivedMessage.body.toLowerCase().split(' ');
             if (testTemplate.lastMessage === lastSentTemplate.id || testTemplate.id === lastSentTemplate.nextMessage) {
                 if (!currentCondition) {
-                    console.log("nao tem condition")
                     return testTemplate
                 }
                 let conditionWords = currentCondition.toLowerCase().split(' ');
                 let match = conditionWords.some(conditionWord => words.some(word => word === conditionWord)) ? true : false;
-                console.log("words", words)
                 if (match) {
-                    console.log("tem condition");
                     return testTemplate;
                 }
             }
         }
     }
-    console.log("nao selecionou nada")
     return templates[0];
 }
 

@@ -25,6 +25,7 @@ import CreateContactService from "../ContactServices/CreateContactService";
 import formatBody from "../../helpers/Mustache";
 import templateSelector from "../TemplateServices/TemplateSelector";
 import { Request } from "express";
+import GetWhatsAppByPhoneNumber from "../WhatsappService/GetWhatsAppByPhoneNumber";
 
 interface Session extends Client {
   id?: number;
@@ -81,9 +82,8 @@ const verifyMediaMessage = async (
   msg: WbotMessage,
   ticket: Ticket,
   contact: Contact,
-  req: Request
+  storeId: number,
 ): Promise<Message> => {
-  const storeId = req.user.storeId
   const quotedMsg = await verifyQuotedMessage(msg);
 
   const media = await msg.downloadMedia();
@@ -136,9 +136,8 @@ const verifyMessage = async (
   msg: WbotMessage,
   ticket: Ticket,
   contact: Contact,
-  req: Request
+  storeId: number
 ) => {
-  const storeId = req.user.storeId
 
   if (msg.type === 'location')
     msg = prepareLocation(msg);
@@ -168,9 +167,8 @@ const verifyMessageSent = async (
   ticket: Ticket,
   contact: Contact,
   templateId: number,
-  req: Request
+  storeId: number
 ) => {
-  const storeId = req.user.storeId
   if (msg.type === 'location')
     msg = prepareLocation(msg);
   const quotedMsg = await verifyQuotedMessage(msg);
@@ -297,7 +295,10 @@ const handleMessage = async (
   wbot: Session,
   req: Request
 ): Promise<void> => {
-  const storeId = req.user.storeId
+  let info = wbot.info.wid.user
+  let storeId = (await GetWhatsAppByPhoneNumber(info)).storeId
+  //console.log(storeId)
+  //console.log(info)
   if (!isValidMsg(msg)) {
     return;
   }
@@ -354,22 +355,22 @@ const handleMessage = async (
     );
 
     if (!msg.fromMe) {
-      let info = wbot.info.wid.user
       if (msg.hasMedia) {
-        console.log("mensagem com midia recebida salva na linha 338", msg.body);
-        await verifyMediaMessage(msg, ticket, contact, req);
+        //console.log("mensagem com midia recebida salva na linha 338", msg.body);
+        await verifyMediaMessage(msg, ticket, contact, storeId);
       }
-      console.log("mensagem de texto recebida salva na linha 341", msg.body);
-      await verifyMessage(msg, ticket, contact, req)
+      //console.log("mensagem de texto recebida salva na linha 341", msg.body);
+      //console.log(contact)
+      await verifyMessage(msg, ticket, contact, storeId)
       if (msg.type === "chat" && !chat.isGroup && !msg.hasMedia) {
         let messageToSend = await templateSelector(contact)
         const sentMessage = await wbot.sendMessage(
-          `${5516992150105}@c.us`,
-          //`${contact.number}@c.us`,
+          //`${5516992150105}@c.us`,
+          `${contact.number}@c.us`,
           messageToSend.message
         );
-        console.log("salvando mensagem enviada na linha 349", msg.body)
-        await verifyMessageSent(sentMessage, ticket, contact, messageToSend.id, req);
+        //console.log("salvando mensagem enviada na linha 349", msg.body)
+        await verifyMessageSent(sentMessage, ticket, contact, messageToSend.id, storeId);
         await verifyQueue(wbot, msg, ticket, contact, messageToSend.queueId)
       }
     }
