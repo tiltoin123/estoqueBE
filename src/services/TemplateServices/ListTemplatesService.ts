@@ -1,9 +1,12 @@
 import Template from "../../models/Template";
 import AppError from "../../errors/AppError";
 
-const ListTemplatesService = async (): Promise<Template[]> => {
+const ListTemplatesService = async (storeId: number): Promise<Template[]> => {
     const template = await Template.findAll({
         attributes: ["id", "message", "lastMessage", "nextMessage", "condition", "queueId"],
+        where: {
+            storeId,
+        }
     });
 
     if (!template) {

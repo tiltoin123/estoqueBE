@@ -15,7 +15,8 @@ export const show = async (req: Request, res: Response): Promise<Response> => {
 
 export const index = async (req: Request, res: Response): Promise<Response> => {
     try {
-        const templates = await ListTemplatesService();
+        const storeId = req.user.storeId
+        const templates = await ListTemplatesService(storeId);
         return res.status(200).json(templates);
     } catch (error) {
         return res.status(404).json({ error: error });

@@ -24,6 +24,7 @@ import UpdateTicketService from "../TicketServices/UpdateTicketService";
 import CreateContactService from "../ContactServices/CreateContactService";
 import formatBody from "../../helpers/Mustache";
 import templateSelector from "../TemplateServices/TemplateSelector";
+import { Request } from "express";
 
 interface Session extends Client {
   id?: number;
@@ -31,11 +32,12 @@ interface Session extends Client {
 
 const writeFileAsync = promisify(writeFile);
 
-const verifyContact = async (msgContact: WbotContact): Promise<Contact> => {
+const verifyContact = async (msgContact: WbotContact, storeId: number): Promise<Contact> => {
   const profilePicUrl = await msgContact.getProfilePicUrl();
 
   const contactData = {
     name: msgContact.name || msgContact.pushname || msgContact.id.user,
+    storeId: storeId,
     number: msgContact.id.user,
     profilePicUrl,
     isGroup: msgContact.isGroup
@@ -78,8 +80,10 @@ function makeRandomId(length: number) {
 const verifyMediaMessage = async (
   msg: WbotMessage,
   ticket: Ticket,
-  contact: Contact
+  contact: Contact,
+  req: Request
 ): Promise<Message> => {
+  const storeId = req.user.storeId
   const quotedMsg = await verifyQuotedMessage(msg);
 
   const media = await msg.downloadMedia();
@@ -111,6 +115,7 @@ const verifyMediaMessage = async (
   const messageData = {
     id: msg.id.id,
     ticketId: ticket.id,
+    storeId: storeId,
     body: msg.body || media.filename,
     from: msg.from.replace(/[^0-9]/g, ""),
     to: msg.to.replace(/[^0-9]/g, ""),
@@ -131,13 +136,16 @@ const verifyMessage = async (
   msg: WbotMessage,
   ticket: Ticket,
   contact: Contact,
+  req: Request
 ) => {
+  const storeId = req.user.storeId
 
   if (msg.type === 'location')
     msg = prepareLocation(msg);
   const quotedMsg = await verifyQuotedMessage(msg);
   const messageData = {
     id: msg.id.id,
+    storeId: storeId,
     ticketId: ticket.id,
     contactId: msg.fromMe ? undefined : contact.id,
     templateId: 1,
@@ -159,13 +167,16 @@ const verifyMessageSent = async (
   msg: WbotMessage,
   ticket: Ticket,
   contact: Contact,
-  templateId: number
+  templateId: number,
+  req: Request
 ) => {
+  const storeId = req.user.storeId
   if (msg.type === 'location')
     msg = prepareLocation(msg);
   const quotedMsg = await verifyQuotedMessage(msg);
   const messageData = {
     id: msg.id.id,
+    storeId: storeId,
     ticketId: ticket.id,
     contactId: msg.fromMe ? undefined : contact.id,
     templateId: templateId,
@@ -283,8 +294,10 @@ const isValidMsg = (msg: WbotMessage): boolean => {
 
 const handleMessage = async (
   msg: WbotMessage,
-  wbot: Session
+  wbot: Session,
+  req: Request
 ): Promise<void> => {
+  const storeId = req.user.storeId
   if (!isValidMsg(msg)) {
     return;
   }
@@ -319,12 +332,12 @@ const handleMessage = async (
         msgGroupContact = await wbot.getContactById(msg.from);
       }
 
-      groupContact = await verifyContact(msgGroupContact);
+      groupContact = await verifyContact(msgGroupContact, storeId);
     }
     const whatsapp = await ShowWhatsAppService(wbot.id!);
     const unreadMessages = msg.fromMe ? 0 : chat.unreadCount;
 
-    let contact = await verifyContact(msgContact);
+    let contact = await verifyContact(msgContact, storeId);
     if (
       unreadMessages === 0 &&
       whatsapp.farewellMessage &&
@@ -336,25 +349,27 @@ const handleMessage = async (
       contact,
       wbot.id!,
       unreadMessages,
+      storeId,
       groupContact
     );
 
     if (!msg.fromMe) {
+      let info = wbot.info.wid.user
       if (msg.hasMedia) {
         console.log("mensagem com midia recebida salva na linha 338", msg.body);
-        await verifyMediaMessage(msg, ticket, contact);
+        await verifyMediaMessage(msg, ticket, contact, req);
       }
       console.log("mensagem de texto recebida salva na linha 341", msg.body);
-      await verifyMessage(msg, ticket, contact)
-      if (msg.type === "chat" && !chat.isGroup) {
+      await verifyMessage(msg, ticket, contact, req)
+      if (msg.type === "chat" && !chat.isGroup && !msg.hasMedia) {
         let messageToSend = await templateSelector(contact)
         const sentMessage = await wbot.sendMessage(
-          //`${5516993043158}@c.us`,
-          `${contact.number}@c.us`,
+          `${5516992150105}@c.us`,
+          //`${contact.number}@c.us`,
           messageToSend.message
         );
         console.log("salvando mensagem enviada na linha 349", msg.body)
-        await verifyMessageSent(sentMessage, ticket, contact, messageToSend.id);
+        await verifyMessageSent(sentMessage, ticket, contact, messageToSend.id, req);
         await verifyQueue(wbot, msg, ticket, contact, messageToSend.queueId)
       }
     }
@@ -388,6 +403,7 @@ const handleMessage = async (
         }
         for await (const ob of obj) {
           const cont = await CreateContactService({
+            storeId: storeId,
             name: contact,
             number: ob.number.replace(/\D/g, "")
           });
@@ -434,18 +450,19 @@ const handleMsgAck = async (msg: WbotMessage, ack: MessageAck) => {
   }
 };
 
-const wbotMessageListener = (wbot: Session): void => {
+const wbotMessageListener = (wbot: Session, req: Request): void => {
   wbot.on("message_create", async msg => {
-    handleMessage(msg, wbot);
+    handleMessage(msg, wbot, req);
   });
 
   wbot.on("media_uploaded", async msg => {
-    handleMessage(msg, wbot);
+    handleMessage(msg, wbot, req);
   });
 
   wbot.on("message_ack", async (msg, ack) => {
     handleMsgAck(msg, ack);
   });
+
 };
 
 export { wbotMessageListener, handleMessage };

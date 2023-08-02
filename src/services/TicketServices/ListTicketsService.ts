@@ -9,6 +9,7 @@ import ShowUserService from "../UserServices/ShowUserService";
 import Whatsapp from "../../models/Whatsapp";
 
 interface Request {
+  storeId: number;
   searchParam?: string;
   pageNumber?: string;
   status?: string;
@@ -26,6 +27,7 @@ interface Response {
 }
 
 const ListTicketsService = async ({
+  storeId,
   searchParam = "",
   pageNumber = "1",
   queueIds,
@@ -36,7 +38,10 @@ const ListTicketsService = async ({
   withUnreadMessages
 }: Request): Promise<Response> => {
   let whereCondition: Filterable["where"] = {
-    [Op.or]: [{ userId }, { status: "pending" }],
+    [Op.and]: [
+      { [Op.or]: [{ userId }, { status: "pending" }] },
+      { storeId }
+    ],
     queueId: { [Op.or]: [queueIds, null] }
   };
   let includeCondition: Includeable[];
@@ -60,7 +65,7 @@ const ListTicketsService = async ({
   ];
 
   if (showAll === "true") {
-    whereCondition = { queueId: { [Op.or]: [queueIds, null] } };
+    whereCondition = { [Op.and]: [{ queueId: { [Op.or]: [queueIds, null] } }, { storeId }] };
   }
 
   if (status) {
@@ -115,9 +120,12 @@ const ListTicketsService = async ({
 
   if (date) {
     whereCondition = {
-      createdAt: {
-        [Op.between]: [+startOfDay(parseISO(date)), +endOfDay(parseISO(date))]
-      }
+      [Op.and]:
+        [{ storeId }, {
+          createdAt: {
+            [Op.between]: [+startOfDay(parseISO(date)), +endOfDay(parseISO(date))]
+          }
+        }]
     };
   }
 
@@ -126,9 +134,12 @@ const ListTicketsService = async ({
     const userQueueIds = user.queues.map(queue => queue.id);
 
     whereCondition = {
-      [Op.or]: [{ userId }, { status: "pending" }],
-      queueId: { [Op.or]: [userQueueIds, null] },
-      unreadMessages: { [Op.gt]: 0 }
+      [Op.and]: [{ storeId },
+      {
+        [Op.or]: [{ userId }, { status: "pending" }],
+        queueId: { [Op.or]: [userQueueIds, null] },
+        unreadMessages: { [Op.gt]: 0 }
+      }]
     };
   }
 

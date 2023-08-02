@@ -17,7 +17,9 @@ describe("User", () => {
   });
 
   it("should be able to create a new user", async () => {
+    const storeId = 1
     const user = await CreateUserService({
+      storeId,
       name: faker.name.findName(),
       email: faker.internet.email(),
       password: faker.internet.password()
@@ -27,7 +29,9 @@ describe("User", () => {
   });
 
   it("should not be able to create a user with duplicated email", async () => {
+    const storeId = 1
     await CreateUserService({
+      storeId,
       name: faker.name.findName(),
       email: "teste@sameemail.com",
       password: faker.internet.password()
@@ -35,6 +39,7 @@ describe("User", () => {
 
     try {
       await CreateUserService({
+        storeId,
         name: faker.name.findName(),
         email: "teste@sameemail.com",
         password: faker.internet.password()

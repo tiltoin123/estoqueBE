@@ -7,6 +7,7 @@ interface ExtraInfo {
 }
 
 interface Request {
+  storeId: number;
   name: string;
   number: string;
   email?: string;
@@ -17,6 +18,7 @@ interface Request {
 const CreateContactService = async ({
   name,
   number,
+  storeId,
   email = "",
   extraInfo = []
 }: Request): Promise<Contact> => {
@@ -32,6 +34,7 @@ const CreateContactService = async ({
     {
       name,
       number,
+      storeId,
       email,
       extraInfo
     },

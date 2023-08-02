@@ -2,13 +2,15 @@ import * as Yup from "yup";
 import AppError from "../../errors/AppError";
 import Queue from "../../models/Queue";
 
+
+
 interface QueueData {
   name: string;
   color: string;
   greetingMessage?: string;
 }
 
-const CreateQueueService = async (queueData: QueueData): Promise<Queue> => {
+const CreateQueueService = async (storeId: number, queueData: QueueData): Promise<Queue> => {
   const { color, name } = queueData;
 
   const queueSchema = Yup.object().shape({
@@ -59,7 +61,7 @@ const CreateQueueService = async (queueData: QueueData): Promise<Queue> => {
     throw new AppError(err.message);
   }
 
-  const queue = await Queue.create(queueData);
+  const queue = await Queue.create({ ...queueData, storeId });
 
   return queue;
 };

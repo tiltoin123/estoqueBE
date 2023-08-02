@@ -3,14 +3,14 @@ import GetLastMessageReceived from "../MessageServices/GetLastMessageReceived"
 import GetLastMessageSent from "../MessageServices/GetLastMessageSent"
 import ListTemplatesService from "./ListTemplatesService"
 import ShowTemplatesService from "./ShowTemplatesService"
-import { Message as WbotMessage } from "whatsapp-web.js";
 
 const templateSelector = async (contact: Contact) => {
 
-    let lastReceivedMessage = await GetLastMessageReceived(contact.id)
-    let lastSentMessage = await GetLastMessageSent(contact.number)
+    let lastReceivedMessage = await GetLastMessageReceived(contact)
+    let lastSentMessage = await GetLastMessageSent(contact)
+    let templates = await ListTemplatesService(contact.storeId)
+    console.log("templates", templates)
     let lastSentTemplate = await ShowTemplatesService(lastSentMessage ? lastSentMessage.templateId : 1)
-    let templates = await ListTemplatesService()
 
     console.log("last Sent Message", lastSentMessage?.templateId)
     if (lastReceivedMessage && lastSentMessage) {

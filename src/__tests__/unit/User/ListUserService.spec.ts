@@ -18,13 +18,16 @@ describe("User", () => {
   });
 
   it("should be able to list users", async () => {
+    const storeId = 1
     await CreateUserService({
+      storeId,
       name: faker.name.findName(),
       email: faker.internet.email(),
       password: faker.internet.password()
     });
 
     const response = await ListUsersService({
+      storeId: 1,
       pageNumber: 1
     });
 

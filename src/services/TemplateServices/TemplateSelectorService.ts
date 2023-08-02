@@ -19,7 +19,8 @@ class MessageSelector {
     }
 
     async listTemplates() {
-        const templateIndex = await ListTemplatesService()
+        const storeId = 1
+        const templateIndex = await ListTemplatesService(storeId)
         return templateIndex
     }
 }

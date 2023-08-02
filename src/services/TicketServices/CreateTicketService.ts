@@ -6,13 +6,15 @@ import User from "../../models/User";
 import ShowContactService from "../ContactServices/ShowContactService";
 
 interface Request {
+  storeId: number
   contactId: number;
   status: string;
   userId: number;
-  queueId ?: number;
+  queueId?: number;
 }
 
 const CreateTicketService = async ({
+  storeId,
   contactId,
   status,
   userId,
@@ -24,12 +26,13 @@ const CreateTicketService = async ({
 
   const { isGroup } = await ShowContactService(contactId);
 
-  if(queueId === undefined) {
-    const user = await User.findByPk(userId, { include: ["queues"]});
+  if (queueId === undefined) {
+    const user = await User.findByPk(userId, { include: ["queues"] });
     queueId = user?.queues.length === 1 ? user.queues[0].id : undefined;
   }
 
   const { id }: Ticket = await defaultWhatsapp.$create("ticket", {
+    storeId,
     contactId,
     status,
     isGroup,

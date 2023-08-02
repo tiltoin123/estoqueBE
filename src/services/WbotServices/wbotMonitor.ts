@@ -5,6 +5,7 @@ import { getIO } from "../../libs/socket";
 import Whatsapp from "../../models/Whatsapp";
 import { logger } from "../../utils/logger";
 import { StartWhatsAppSession } from "./StartWhatsAppSession";
+import { Request } from "express";
 
 interface Session extends Client {
   id?: number;
@@ -12,7 +13,8 @@ interface Session extends Client {
 
 const wbotMonitor = async (
   wbot: Session,
-  whatsapp: Whatsapp
+  whatsapp: Whatsapp,
+  req: Request
 ): Promise<void> => {
   const io = getIO();
   const sessionName = whatsapp.name;
@@ -51,7 +53,9 @@ const wbotMonitor = async (
         session: whatsapp
       });
     });
-
+    wbot.on("message", async () => {
+      console.log("$%&¨&(¨&*(%¨&#$%%¨(*", wbot.info)
+    });
     wbot.on("disconnected", async reason => {
       logger.info(`Disconnected session: ${sessionName}, reason: ${reason}`);
       try {
@@ -66,7 +70,7 @@ const wbotMonitor = async (
         session: whatsapp
       });
 
-      setTimeout(() => StartWhatsAppSession(whatsapp), 2000);
+      setTimeout(() => StartWhatsAppSession(whatsapp, req), 2000);
     });
   } catch (err) {
     Sentry.captureException(err);

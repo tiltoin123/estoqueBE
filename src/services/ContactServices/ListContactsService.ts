@@ -2,6 +2,7 @@ import { Sequelize, Op } from "sequelize";
 import Contact from "../../models/Contact";
 
 interface Request {
+  storeId: number;
   searchParam?: string;
   pageNumber?: string;
 }
@@ -13,20 +14,24 @@ interface Response {
 }
 
 const ListContactsService = async ({
+  storeId,
   searchParam = "",
   pageNumber = "1"
 }: Request): Promise<Response> => {
   const whereCondition = {
-    [Op.or]: [
-      {
-        name: Sequelize.where(
-          Sequelize.fn("LOWER", Sequelize.col("name")),
-          "LIKE",
-          `%${searchParam.toLowerCase().trim()}%`
-        )
-      },
-      { number: { [Op.like]: `%${searchParam.toLowerCase().trim()}%` } }
-    ]
+    [Op.and]: [{
+      [Op.or]: [
+        {
+          name: Sequelize.where(
+            Sequelize.fn("LOWER", Sequelize.col("name")),
+            "LIKE",
+            `%${searchParam.toLowerCase().trim()}%`
+          )
+        },
+        { number: { [Op.like]: `%${searchParam.toLowerCase().trim()}%` } }
+      ]
+    },
+    { storeId: storeId }]
   };
   const limit = 20;
   const offset = limit * (+pageNumber - 1);

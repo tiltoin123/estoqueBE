@@ -3,7 +3,7 @@ import AppError from "../../../errors/AppError";
 import AuthUserService from "../../../services/UserServices/AuthUserService";
 import CreateUserService from "../../../services/UserServices/CreateUserService";
 import { disconnect, truncate } from "../../utils/database";
-
+import { Request } from "express";
 describe("Auth", () => {
   beforeEach(async () => {
     await truncate();
@@ -20,11 +20,12 @@ describe("Auth", () => {
   it("should be able to login with an existing user", async () => {
     const password = faker.internet.password();
     const email = faker.internet.email();
-
+    const storeId = 1
     await CreateUserService({
+      storeId,
       name: faker.name.findName(),
       email,
-      password
+      password,
     });
 
     const response = await AuthUserService({
@@ -49,7 +50,9 @@ describe("Auth", () => {
   });
 
   it("should not be able to login with incorret password", async () => {
+    const storeId = 1
     await CreateUserService({
+      storeId,
       name: faker.name.findName(),
       email: "mail@test.com",
       password: faker.internet.password()

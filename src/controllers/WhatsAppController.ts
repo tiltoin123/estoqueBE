@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, Response, request } from "express";
 import { getIO } from "../libs/socket";
 import { removeWbot } from "../libs/wbot";
 import { StartWhatsAppSession } from "../services/WbotServices/StartWhatsAppSession";
@@ -16,6 +16,7 @@ interface WhatsappData {
   farewellMessage?: string;
   status?: string;
   isDefault?: boolean;
+  storeId: number
 }
 
 export const index = async (req: Request, res: Response): Promise<Response> => {
@@ -31,19 +32,21 @@ export const store = async (req: Request, res: Response): Promise<Response> => {
     isDefault,
     greetingMessage,
     farewellMessage,
-    queueIds
+    queueIds,
+    storeId
   }: WhatsappData = req.body;
-
+  console.log("objeto de cadastro de wpp", req.body)
   const { whatsapp, oldDefaultWhatsapp } = await CreateWhatsAppService({
     name,
     status,
     isDefault,
     greetingMessage,
     farewellMessage,
-    queueIds
+    queueIds,
+    storeId
   });
 
-  StartWhatsAppSession(whatsapp);
+  StartWhatsAppSession(whatsapp, request);
 
   const io = getIO();
   io.emit("whatsapp", {
@@ -75,7 +78,8 @@ export const update = async (
 ): Promise<Response> => {
   const { whatsappId } = req.params;
   const whatsappData = req.body;
-
+  console.log("req.params update", req.params)
+  console.log("req.body update", req.body)
   const { whatsapp, oldDefaultWhatsapp } = await UpdateWhatsAppService({
     whatsappData,
     whatsappId

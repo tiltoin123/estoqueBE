@@ -4,6 +4,7 @@ import Ticket from "../../models/Ticket";
 import Whatsapp from "../../models/Whatsapp";
 
 interface MessageData {
+  storeId: number;
   id: string;
   ticketId: number;
   body: string;

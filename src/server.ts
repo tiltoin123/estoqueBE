@@ -3,11 +3,11 @@ import app from "./app";
 import { initIO } from "./libs/socket";
 import { logger } from "./utils/logger";
 import { StartAllWhatsAppsSessions } from "./services/WbotServices/StartAllWhatsAppsSessions";
-
+import { request } from "express";
 const server = app.listen(process.env.PORT, () => {
   logger.info(`Server started on port: ${process.env.PORT}`);
 });
 
 initIO(server);
-StartAllWhatsAppsSessions();
+StartAllWhatsAppsSessions(request);
 gracefulShutdown(server);

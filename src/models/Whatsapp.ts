@@ -82,6 +82,10 @@ class Whatsapp extends Model<Whatsapp> {
 
   @BelongsTo(() => Store)
   store: Store
+
+
+  @Column(DataType.TEXT)
+  whatsappNumber: string;
 }
 
 export default Whatsapp;

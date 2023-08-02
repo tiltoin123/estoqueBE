@@ -1,10 +1,12 @@
+import Contact from "../../models/Contact";
 import Message from "../../models/Message";
 
-const GetLastMessageSent = async (to: string) => {
+const GetLastMessageSent = async (contact: Contact) => {
     try {
         const lastMessage = await Message.findOne({
             where: {
-                to: to,
+                storeId: contact.storeId,
+                contactId: contact.id,
                 fromMe: 1
             },
             order: [["createdAt", "DESC"]],

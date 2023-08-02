@@ -22,8 +22,9 @@ interface QuickAnswerData {
 
 export const index = async (req: Request, res: Response): Promise<Response> => {
   const { searchParam, pageNumber } = req.query as IndexQuery;
-
+  const { storeId } = req.user
   const { quickAnswers, count, hasMore } = await ListQuickAnswerService({
+    storeId,
     searchParam,
     pageNumber
   });

@@ -7,6 +7,7 @@ interface ExtraInfo {
 }
 
 interface Request {
+  storeId: number;
   name: string;
   number: string;
   isGroup: boolean;
@@ -18,6 +19,7 @@ interface Request {
 const CreateOrUpdateContactService = async ({
   name,
   number: rawNumber,
+  storeId,
   profilePicUrl,
   isGroup,
   email = "",
@@ -41,6 +43,7 @@ const CreateOrUpdateContactService = async ({
     contact = await Contact.create({
       name,
       number,
+      storeId,
       profilePicUrl,
       email,
       isGroup,

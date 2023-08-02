@@ -8,6 +8,7 @@ interface ExtraInfo {
 }
 
 interface Request {
+    storeId: number;
     name: string;
     number: string;
     email?: string;
@@ -15,13 +16,14 @@ interface Request {
     extraInfo?: ExtraInfo[];
 }
 
-const GetContactService = async ({ name, number }: Request): Promise<Contact> => {
+const GetContactService = async ({ name, number, storeId }: Request): Promise<Contact> => {
     const numberExists = await Contact.findOne({
         where: { number }
     });
 
     if (!numberExists) {
         const contact = await CreateContactService({
+            storeId,
             name,
             number,
         })

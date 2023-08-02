@@ -4,11 +4,13 @@ import Contact from "../../models/Contact";
 import Ticket from "../../models/Ticket";
 import ShowTicketService from "./ShowTicketService";
 
+
 const FindOrCreateTicketService = async (
   contact: Contact,
   whatsappId: number,
   unreadMessages: number,
-  groupContact?: Contact
+  storeId: number,
+  groupContact?: Contact,
 ): Promise<Ticket> => {
   let ticket = await Ticket.findOne({
     where: {
@@ -65,6 +67,7 @@ const FindOrCreateTicketService = async (
 
   if (!ticket) {
     ticket = await Ticket.create({
+      storeId,
       contactId: groupContact ? groupContact.id : contact.id,
       status: "pending",
       isGroup: !!groupContact,

@@ -18,7 +18,9 @@ describe("User", () => {
   });
 
   it("should be delete a existing user", async () => {
+    const storeId = 1
     const { id } = await CreateUserService({
+      storeId,
       name: faker.name.findName(),
       email: faker.internet.email(),
       password: faker.internet.password()
