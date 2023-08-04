@@ -2,9 +2,9 @@ import { QueryInterface } from "sequelize";
 
 const queueData = [
     {
-        name: "Canal de Boas Vindas",
+        name: "Atendimento",
         color: "#008b02",
-        greetingMessage: "Olá sou o chatbot da imobiliária fábio liporoni, como posso ajudar?",
+        greetingMessage: "",
         createdAt: new Date(),
         updatedAt: new Date(),
         storeId: 1,

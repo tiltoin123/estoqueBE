@@ -35,7 +35,6 @@ export const store = async (req: Request, res: Response): Promise<Response> => {
     queueIds,
     storeId
   }: WhatsappData = req.body;
-  console.log("objeto de cadastro de wpp", req.body)
   const { whatsapp, oldDefaultWhatsapp } = await CreateWhatsAppService({
     name,
     status,
@@ -78,8 +77,6 @@ export const update = async (
 ): Promise<Response> => {
   const { whatsappId } = req.params;
   const whatsappData = req.body;
-  console.log("req.params update", req.params)
-  console.log("req.body update", req.body)
   const { whatsapp, oldDefaultWhatsapp } = await UpdateWhatsAppService({
     whatsappData,
     whatsappId

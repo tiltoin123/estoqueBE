@@ -33,7 +33,7 @@ const ListMessagesService = async ({
   const offset = limit * (+pageNumber - 1);
 
   const { count, rows: messages } = await Message.findAndCountAll({
-    where: { [Op.and]: [storeId, ticketId] },
+    where: { ticketId },
     limit,
     include: [
       "contact",

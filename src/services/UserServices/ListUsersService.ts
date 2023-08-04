@@ -1,10 +1,10 @@
-import { Sequelize, Op } from "sequelize";
+import { Sequelize, Op, fn, col } from "sequelize";
 import Queue from "../../models/Queue";
 import User from "../../models/User";
 import Whatsapp from "../../models/Whatsapp";
 
 interface Request {
-  storeId: number
+  storeId: number;
   searchParam?: string;
   pageNumber?: string | number;
 }
@@ -20,23 +20,29 @@ const ListUsersService = async ({
   searchParam = "",
   pageNumber = "1"
 }: Request): Promise<Response> => {
-  const whereCondition =  {
+  const sanitizedSearchParam = searchParam.toLowerCase().trim();
+
+  const whereCondition = {
     [Op.and]: [
       {
         [Op.or]: [
           {
-            "$User.name$": Sequelize.where(
-              Sequelize.fn("LOWER", Sequelize.col("User.name")),
-              "LIKE",
-              `%${searchParam.toLowerCase()}%`
-            )
+            name: {
+              [Op.like]: `%${sanitizedSearchParam}%`
+            }
           },
-          { email: { [Op.like]: `%${searchParam.toLowerCase()}%` } }
+          {
+            email: {
+              [Op.like]: `%${sanitizedSearchParam}%`
+            }
+          }
         ]
       },
-      { storeId: storeId }
+      {
+        storeId: storeId
+      }
     ]
-  };;
+  };
   const limit = 20;
   const offset = limit * (+pageNumber - 1);
 
@@ -53,7 +59,6 @@ const ListUsersService = async ({
   });
 
   const hasMore = count > offset + users.length;
-  console.log("listUserService linha 49 users[0].storeId", users[0].storeId)
   return {
     users,
     count,

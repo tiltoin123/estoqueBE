@@ -15,7 +15,6 @@ const ShowUserService = async (id: string | number): Promise<User> => {
   if (!user) {
     throw new AppError("ERR_NO_USER_FOUND", 404);
   }
-  console.log("ShowUserService linha 18 user.storeId", user.storeId)
   return user;
 };
 

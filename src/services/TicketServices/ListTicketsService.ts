@@ -1,4 +1,4 @@
-import { Op, fn, where, col, Filterable, Includeable } from "sequelize";
+import { Op } from "sequelize";
 import { startOfDay, endOfDay, parseISO } from "date-fns";
 
 import Ticket from "../../models/Ticket";
@@ -37,16 +37,14 @@ const ListTicketsService = async ({
   userId,
   withUnreadMessages
 }: Request): Promise<Response> => {
-  let whereCondition: Filterable["where"] = {
+  let whereCondition: any = {
     [Op.and]: [
       { [Op.or]: [{ userId }, { status: "pending" }] },
       { storeId }
     ],
     queueId: { [Op.or]: [queueIds, null] }
   };
-  let includeCondition: Includeable[];
-
-  includeCondition = [
+  let includeCondition: any[] = [
     {
       model: Contact,
       as: "contact",
@@ -76,7 +74,7 @@ const ListTicketsService = async ({
   }
 
   if (searchParam) {
-    const sanitizedSearchParam = searchParam.toLocaleLowerCase().trim();
+    const sanitizedSearchParam = `%${searchParam.toLocaleLowerCase().trim()}%`;
 
     includeCondition = [
       ...includeCondition,
@@ -85,11 +83,9 @@ const ListTicketsService = async ({
         as: "messages",
         attributes: ["id", "body"],
         where: {
-          body: where(
-            fn("LOWER", col("body")),
-            "LIKE",
-            `%${sanitizedSearchParam}%`
-          )
+          body: {
+            [Op.like]: sanitizedSearchParam
+          }
         },
         required: false,
         duplicating: false
@@ -100,19 +96,19 @@ const ListTicketsService = async ({
       ...whereCondition,
       [Op.or]: [
         {
-          "$contact.name$": where(
-            fn("LOWER", col("contact.name")),
-            "LIKE",
-            `%${sanitizedSearchParam}%`
-          )
+          "$contact.name$": {
+            [Op.like]: sanitizedSearchParam
+          }
         },
-        { "$contact.number$": { [Op.like]: `%${sanitizedSearchParam}%` } },
         {
-          "$message.body$": where(
-            fn("LOWER", col("body")),
-            "LIKE",
-            `%${sanitizedSearchParam}%`
-          )
+          "$contact.number$": {
+            [Op.like]: sanitizedSearchParam
+          }
+        },
+        {
+          "$messages.body$": {
+            [Op.like]: sanitizedSearchParam
+          }
         }
       ]
     };
@@ -120,12 +116,10 @@ const ListTicketsService = async ({
 
   if (date) {
     whereCondition = {
-      [Op.and]:
-        [{ storeId }, {
-          createdAt: {
-            [Op.between]: [+startOfDay(parseISO(date)), +endOfDay(parseISO(date))]
-          }
-        }]
+      ...whereCondition,
+      createdAt: {
+        [Op.between]: [startOfDay(parseISO(date)), endOfDay(parseISO(date))]
+      }
     };
   }
 
@@ -134,12 +128,21 @@ const ListTicketsService = async ({
     const userQueueIds = user.queues.map(queue => queue.id);
 
     whereCondition = {
-      [Op.and]: [{ storeId },
-      {
-        [Op.or]: [{ userId }, { status: "pending" }],
-        queueId: { [Op.or]: [userQueueIds, null] },
-        unreadMessages: { [Op.gt]: 0 }
-      }]
+      ...whereCondition,
+      [Op.or]: [
+        {
+          userId
+        },
+        {
+          status: "pending"
+        }
+      ],
+      queueId: {
+        [Op.or]: [userQueueIds, null]
+      },
+      unreadMessages: {
+        [Op.gt]: 0
+      }
     };
   }
 
