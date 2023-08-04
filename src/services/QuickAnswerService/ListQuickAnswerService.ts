@@ -1,7 +1,8 @@
-import { Sequelize } from "sequelize";
+import { Op, Sequelize, fn, col } from "sequelize";
 import QuickAnswer from "../../models/QuickAnswer";
 
 interface Request {
+  storeId: number;
   searchParam?: string;
   pageNumber?: string;
 }
@@ -13,15 +14,17 @@ interface Response {
 }
 
 const ListQuickAnswerService = async ({
+  storeId,
   searchParam = "",
   pageNumber = "1"
 }: Request): Promise<Response> => {
+  const sanitizedSearchParam = searchParam.toLowerCase().trim();
+
   const whereCondition = {
-    message: Sequelize.where(
-      Sequelize.fn("LOWER", Sequelize.col("message")),
-      "LIKE",
-      `%${searchParam.toLowerCase().trim()}%`
-    )
+    message: {
+      [Op.like]: `%${sanitizedSearchParam}%`
+    },
+    storeId: storeId
   };
   const limit = 20;
   const offset = limit * (+pageNumber - 1);

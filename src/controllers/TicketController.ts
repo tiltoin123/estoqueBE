@@ -39,6 +39,7 @@ export const index = async (req: Request, res: Response): Promise<Response> => {
   } = req.query as IndexQuery;
 
   const userId = req.user.id;
+  const storeId = req.user.storeId
 
   let queueIds: number[] = [];
 
@@ -47,6 +48,7 @@ export const index = async (req: Request, res: Response): Promise<Response> => {
   }
 
   const { tickets, count, hasMore } = await ListTicketsService({
+    storeId,
     searchParam,
     pageNumber,
     status,
@@ -62,8 +64,8 @@ export const index = async (req: Request, res: Response): Promise<Response> => {
 
 export const store = async (req: Request, res: Response): Promise<Response> => {
   const { contactId, status, userId }: TicketData = req.body;
-
-  const ticket = await CreateTicketService({ contactId, status, userId });
+  const storeId = req.user.storeId
+  const ticket = await CreateTicketService({ contactId, status, userId, storeId });
 
   const io = getIO();
   io.to(ticket.status).emit("ticket", {
@@ -106,7 +108,7 @@ export const update = async (
       });
     }
   }
-
+  console.log("tickertcontroleer pas1 @#$@#$@#$@#@#$@#$")
   return res.status(200).json(ticket);
 };
 

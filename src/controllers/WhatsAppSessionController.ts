@@ -8,20 +8,20 @@ const store = async (req: Request, res: Response): Promise<Response> => {
   const { whatsappId } = req.params;
   const whatsapp = await ShowWhatsAppService(whatsappId);
 
-  StartWhatsAppSession(whatsapp);
+  StartWhatsAppSession(whatsapp, req);
 
   return res.status(200).json({ message: "Starting session." });
 };
 
 const update = async (req: Request, res: Response): Promise<Response> => {
   const { whatsappId } = req.params;
-
+  const storeId = req.user.storeId
   const { whatsapp } = await UpdateWhatsAppService({
     whatsappId,
-    whatsappData: { session: "" }
+    whatsappData: { session: "", storeId }
   });
 
-  StartWhatsAppSession(whatsapp);
+  StartWhatsAppSession(whatsapp, req);
 
   return res.status(200).json({ message: "Starting session." });
 };

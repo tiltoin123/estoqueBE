@@ -1,10 +1,12 @@
+import Contact from "../../models/Contact";
 import Message from "../../models/Message";
 
-const GetLastMessageSent = async (to: string) => {
+const GetLastMessageSent = async (contact: Contact): Promise<Message | null> => {
     try {
         const lastMessage = await Message.findOne({
             where: {
-                to: to,
+                storeId: contact.storeId,
+                to: contact.number,
                 fromMe: 1
             },
             order: [["createdAt", "DESC"]],
@@ -12,7 +14,7 @@ const GetLastMessageSent = async (to: string) => {
 
         return lastMessage;
     } catch (error) {
-        console.error("Error retrieving last message:", error);
+        console.error("Error retrieving last message sent:", error);
         throw error;
     }
 };

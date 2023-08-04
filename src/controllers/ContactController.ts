@@ -38,7 +38,10 @@ interface ContactData {
 export const index = async (req: Request, res: Response): Promise<Response> => {
   const { searchParam, pageNumber } = req.query as IndexQuery;
 
+  const { storeId } = req.user;
+
   const { contacts, count, hasMore } = await ListContactsService({
+    storeId,
     searchParam,
     pageNumber
   });
@@ -49,9 +52,13 @@ export const index = async (req: Request, res: Response): Promise<Response> => {
 export const getContact = async (req: Request, res: Response): Promise<Response> => {
   const { name, number } = req.body as IndexGetContactQuery;
 
+  const { id, storeId } = req.user;
+
+
   const contact = await GetContactService({
     name,
-    number
+    number,
+    storeId
   });
 
   return res.status(200).json(contact);
@@ -75,18 +82,19 @@ export const store = async (req: Request, res: Response): Promise<Response> => {
   }
 
   await CheckIsValidContact(newContact.number);
-  const validNumber : any = await CheckContactNumber(newContact.number)
-  
+  const validNumber: any = await CheckContactNumber(newContact.number)
+
   const profilePicUrl = await GetProfilePicUrl(validNumber);
 
   let name = newContact.name
   let number = validNumber
   let email = newContact.email
   let extraInfo = newContact.extraInfo
-
+  let storeId = req.user.storeId
   const contact = await CreateContactService({
     name,
     number,
+    storeId,
     email,
     extraInfo,
     profilePicUrl

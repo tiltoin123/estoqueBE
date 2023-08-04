@@ -18,17 +18,20 @@ type IndexQuery = {
 export const index = async (req: Request, res: Response): Promise<Response> => {
   const { searchParam, pageNumber } = req.query as IndexQuery;
 
+  const { storeId } = req.user;
+
   const { users, count, hasMore } = await ListUsersService({
+    storeId,
     searchParam,
     pageNumber
-  });
 
+  });
   return res.json({ users, count, hasMore });
 };
 
 export const store = async (req: Request, res: Response): Promise<Response> => {
   const { email, password, name, profile, queueIds, whatsappId } = req.body;
-
+  const storeId = req.user.storeId
   if (
     req.url === "/signup" &&
     (await CheckSettingsHelper("userCreation")) === "disabled"
@@ -39,6 +42,7 @@ export const store = async (req: Request, res: Response): Promise<Response> => {
   }
 
   const user = await CreateUserService({
+    storeId,
     email,
     password,
     name,
@@ -52,7 +56,6 @@ export const store = async (req: Request, res: Response): Promise<Response> => {
     action: "create",
     user
   });
-
   return res.status(200).json(user);
 };
 
@@ -82,7 +85,6 @@ export const update = async (
     action: "update",
     user
   });
-
   return res.status(200).json(user);
 };
 
@@ -103,6 +105,5 @@ export const remove = async (
     action: "delete",
     userId
   });
-
   return res.status(200).json({ message: "User deleted" });
 };

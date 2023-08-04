@@ -13,6 +13,7 @@ import {
 import Contact from "./Contact";
 import Ticket from "./Ticket";
 import Template from "./Template";
+import Store from "./Stores";
 @Table
 class Message extends Model<Message> {
   @PrimaryKey
@@ -90,6 +91,13 @@ class Message extends Model<Message> {
 
   @BelongsTo(() => Template, "templateId")
   template: Template
+
+  @ForeignKey(() => Store)
+  @Column
+  storeId: number;
+
+  @BelongsTo(() => Store)
+  store: Store
 }
 
 export default Message;

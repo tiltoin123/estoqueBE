@@ -19,7 +19,9 @@ describe("User", () => {
   });
 
   it("should be able to find a user", async () => {
+    const storeId = 1
     const newUser = await CreateUserService({
+      storeId,
       name: faker.name.findName(),
       email: faker.internet.email(),
       password: faker.internet.password()

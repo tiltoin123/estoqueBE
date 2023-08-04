@@ -24,8 +24,9 @@ type MessageData = {
 export const index = async (req: Request, res: Response): Promise<Response> => {
   const { ticketId } = req.params;
   const { pageNumber } = req.query as IndexQuery;
-
+  const { storeId } = req.user
   const { count, messages, ticket, hasMore } = await ListMessagesService({
+    storeId,
     pageNumber,
     ticketId
   });

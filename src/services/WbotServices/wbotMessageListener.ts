@@ -24,6 +24,8 @@ import UpdateTicketService from "../TicketServices/UpdateTicketService";
 import CreateContactService from "../ContactServices/CreateContactService";
 import formatBody from "../../helpers/Mustache";
 import templateSelector from "../TemplateServices/TemplateSelector";
+import { Request } from "express";
+import GetWhatsAppByPhoneNumber from "../WhatsappService/GetWhatsAppByPhoneNumber";
 
 interface Session extends Client {
   id?: number;
@@ -31,11 +33,12 @@ interface Session extends Client {
 
 const writeFileAsync = promisify(writeFile);
 
-const verifyContact = async (msgContact: WbotContact): Promise<Contact> => {
+const verifyContact = async (msgContact: WbotContact, storeId: number): Promise<Contact> => {
   const profilePicUrl = await msgContact.getProfilePicUrl();
 
   const contactData = {
     name: msgContact.name || msgContact.pushname || msgContact.id.user,
+    storeId: storeId,
     number: msgContact.id.user,
     profilePicUrl,
     isGroup: msgContact.isGroup
@@ -78,7 +81,7 @@ function makeRandomId(length: number) {
 const verifyMediaMessage = async (
   msg: WbotMessage,
   ticket: Ticket,
-  contact: Contact
+  storeId: number,
 ): Promise<Message> => {
   const quotedMsg = await verifyQuotedMessage(msg);
 
@@ -111,6 +114,7 @@ const verifyMediaMessage = async (
   const messageData = {
     id: msg.id.id,
     ticketId: ticket.id,
+    storeId: storeId,
     body: msg.body || media.filename,
     from: msg.from.replace(/[^0-9]/g, ""),
     to: msg.to.replace(/[^0-9]/g, ""),
@@ -131,6 +135,7 @@ const verifyMessage = async (
   msg: WbotMessage,
   ticket: Ticket,
   contact: Contact,
+  storeId: number
 ) => {
 
   if (msg.type === 'location')
@@ -138,6 +143,7 @@ const verifyMessage = async (
   const quotedMsg = await verifyQuotedMessage(msg);
   const messageData = {
     id: msg.id.id,
+    storeId: storeId,
     ticketId: ticket.id,
     contactId: msg.fromMe ? undefined : contact.id,
     templateId: 1,
@@ -159,16 +165,18 @@ const verifyMessageSent = async (
   msg: WbotMessage,
   ticket: Ticket,
   contact: Contact,
-  templateId: number
+  templateId: number,
+  storeId: number
 ) => {
   if (msg.type === 'location')
     msg = prepareLocation(msg);
   const quotedMsg = await verifyQuotedMessage(msg);
   const messageData = {
     id: msg.id.id,
+    storeId: storeId,
     ticketId: ticket.id,
     contactId: msg.fromMe ? undefined : contact.id,
-    templateId: templateId,
+    templateId: templateId ? templateId : 1,
     from: msg.from.replace(/[^0-9]/g, ""),
     to: msg.to.replace(/[^0-9]/g, ""),
     body: msg.body,
@@ -195,9 +203,7 @@ const prepareLocation = (msg: WbotMessage): WbotMessage => {
 
 const verifyQueue = async (
   wbot: Session,
-  msg: WbotMessage,
   ticket: Ticket,
-  contact: Contact,
   queueId: null | number
 ) => {
   const { queues, greetingMessage } = await ShowWhatsAppService(wbot.id!);
@@ -219,49 +225,6 @@ const verifyQueue = async (
       ticketId: ticket.id
     });
   }
-  // o usuario pode selecionar a fila desejada com base no conteudo enviado atraves de mensagens
-  /* 
-    const selectedOption = msg.body;
-  
-    const choosenQueue = queues[+selectedOption - 1];
-  
-    if (choosenQueue) {
-      //atualiza a fila para a fila escolhida
-      await UpdateTicketService({
-        ticketData: { queueId: choosenQueue.id },
-        ticketId: ticket.id
-      });
-  
-      const body = formatBody(`\u200e${choosenQueue.greetingMessage}`, contact);
-  
-      const sentMessage = await wbot.sendMessage(`${5516993043158}@c.us`, body);//manda a mensagem de boas vindas da fila escolhida
-      console.log("salvou na linha 228")
-      await verifyMessage(sentMessage, ticket, contact);
-    } else {
-      let options = "";
-  
-      queues.forEach((queue, index) => {
-        options += `*${index + 1}* - ${queue.name}\n`;
-      });
-  
-      const body = formatBody(`\u200e${greetingMessage}\n${options}`, contact);
-  
-      const debouncedSentMessage = debounce(
-        async () => {
-          const sentMessage = await wbot.sendMessage(
-            //`${contact.number}@c.us`,
-            `${5516993043158}@c.us`,
-            body
-          );
-          console.log("salvou na linha 245")
-          verifyMessage(sentMessage, ticket, contact);
-        },
-        3000,
-        ticket.id
-      );
-  
-      debouncedSentMessage();
-    } */
 };
 
 const isValidMsg = (msg: WbotMessage): boolean => {
@@ -283,8 +246,12 @@ const isValidMsg = (msg: WbotMessage): boolean => {
 
 const handleMessage = async (
   msg: WbotMessage,
-  wbot: Session
+  wbot: Session,
+  req: Request
 ): Promise<void> => {
+  let info = wbot.info.wid.user
+  let storeId = (await GetWhatsAppByPhoneNumber(info)).storeId
+
   if (!isValidMsg(msg)) {
     return;
   }
@@ -319,12 +286,12 @@ const handleMessage = async (
         msgGroupContact = await wbot.getContactById(msg.from);
       }
 
-      groupContact = await verifyContact(msgGroupContact);
+      groupContact = await verifyContact(msgGroupContact, storeId);
     }
     const whatsapp = await ShowWhatsAppService(wbot.id!);
     const unreadMessages = msg.fromMe ? 0 : chat.unreadCount;
 
-    let contact = await verifyContact(msgContact);
+    let contact = await verifyContact(msgContact, storeId);
     if (
       unreadMessages === 0 &&
       whatsapp.farewellMessage &&
@@ -336,27 +303,33 @@ const handleMessage = async (
       contact,
       wbot.id!,
       unreadMessages,
+      storeId,
       groupContact
     );
 
-    if (!msg.fromMe) {
+    if (!msg.fromMe && ticket.status === "pending") {
       if (msg.hasMedia) {
-        console.log("mensagem com midia recebida salva na linha 338", msg.body);
-        await verifyMediaMessage(msg, ticket, contact);
+        await verifyMediaMessage(msg, ticket, storeId);
       }
-      console.log("mensagem de texto recebida salva na linha 341", msg.body);
-      await verifyMessage(msg, ticket, contact)
-      if (msg.type === "chat" && !chat.isGroup) {
+      await verifyMessage(msg, ticket, contact, storeId)
+      if (msg.type === "chat" && !chat.isGroup && !msg.hasMedia) {
         let messageToSend = await templateSelector(contact)
         const sentMessage = await wbot.sendMessage(
-          //`${5516993043158}@c.us`,
+          //`${5516992150105}@c.us`,
           `${contact.number}@c.us`,
           messageToSend.message
         );
-        console.log("salvando mensagem enviada na linha 349", msg.body)
-        await verifyMessageSent(sentMessage, ticket, contact, messageToSend.id);
-        await verifyQueue(wbot, msg, ticket, contact, messageToSend.queueId)
+        await verifyMessageSent(sentMessage, ticket, contact, messageToSend.id, storeId);
+        await verifyQueue(wbot, ticket, messageToSend.queueId)
       }
+    }
+
+    if (msg.fromMe && ticket.status === "open") {
+      verifyMessageSent(msg, ticket, contact, 1, storeId)
+    }
+
+    if (!msg.fromMe && ticket.status === "open") {
+      verifyMessage(msg, ticket, contact, storeId)
     }
 
     if (
@@ -366,7 +339,7 @@ const handleMessage = async (
       !ticket.userId &&
       whatsapp.queues.length >= 1
     ) {
-      await verifyQueue(wbot, msg, ticket, contact, null);
+      await verifyQueue(wbot, ticket, null);
     }
 
     if (msg.type === "vcard") {
@@ -388,6 +361,7 @@ const handleMessage = async (
         }
         for await (const ob of obj) {
           const cont = await CreateContactService({
+            storeId: storeId,
             name: contact,
             number: ob.number.replace(/\D/g, "")
           });
@@ -434,18 +408,19 @@ const handleMsgAck = async (msg: WbotMessage, ack: MessageAck) => {
   }
 };
 
-const wbotMessageListener = (wbot: Session): void => {
+const wbotMessageListener = (wbot: Session, req: Request): void => {
   wbot.on("message_create", async msg => {
-    handleMessage(msg, wbot);
+    handleMessage(msg, wbot, req);
   });
 
   wbot.on("media_uploaded", async msg => {
-    handleMessage(msg, wbot);
+    handleMessage(msg, wbot, req);
   });
 
   wbot.on("message_ack", async (msg, ack) => {
     handleMsgAck(msg, ack);
   });
+
 };
 
 export { wbotMessageListener, handleMessage };

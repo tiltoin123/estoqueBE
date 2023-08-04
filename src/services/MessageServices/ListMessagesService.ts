@@ -1,9 +1,11 @@
+import { Op } from "sequelize";
 import AppError from "../../errors/AppError";
 import Message from "../../models/Message";
 import Ticket from "../../models/Ticket";
 import ShowTicketService from "../TicketServices/ShowTicketService";
 
 interface Request {
+  storeId: number;
   ticketId: string;
   pageNumber?: string;
 }
@@ -16,6 +18,7 @@ interface Response {
 }
 
 const ListMessagesService = async ({
+  storeId,
   pageNumber = "1",
   ticketId
 }: Request): Promise<Response> => {

@@ -4,9 +4,10 @@ import { wbotMessageListener } from "./wbotMessageListener";
 import { getIO } from "../../libs/socket";
 import wbotMonitor from "./wbotMonitor";
 import { logger } from "../../utils/logger";
-
+import { Request } from "express";
 export const StartWhatsAppSession = async (
-  whatsapp: Whatsapp
+  whatsapp: Whatsapp,
+  req: Request
 ): Promise<void> => {
   await whatsapp.update({ status: "OPENING" });
 
@@ -17,9 +18,9 @@ export const StartWhatsAppSession = async (
   });
 
   try {
-    const wbot = await initWbot(whatsapp);
-    wbotMessageListener(wbot);
-    wbotMonitor(wbot, whatsapp);
+    const wbot = await initWbot(whatsapp, req);
+    wbotMessageListener(wbot, req);
+    wbotMonitor(wbot, whatsapp, req);
   } catch (err) {
     logger.error(err);
   }

@@ -5,14 +5,16 @@ import Whatsapp from "../models/Whatsapp";
 import AppError from "../errors/AppError";
 import { logger } from "../utils/logger";
 import { handleMessage } from "../services/WbotServices/wbotMessageListener";
+import { Request } from "express";
 
 interface Session extends Client {
   id?: number;
+  storeId?: number;
 }
 
 const sessions: Session[] = [];
 
-const syncUnreadMessages = async (wbot: Session) => {
+const syncUnreadMessages = async (wbot: Session, req: Request) => {
   const chats = await wbot.getChats();
 
   /* eslint-disable no-restricted-syntax */
@@ -24,7 +26,7 @@ const syncUnreadMessages = async (wbot: Session) => {
       });
 
       for (const msg of unreadMessages) {
-        await handleMessage(msg, wbot);
+        await handleMessage(msg, wbot, req);
       }
 
       await chat.sendSeen();
@@ -32,7 +34,7 @@ const syncUnreadMessages = async (wbot: Session) => {
   }
 };
 
-export const initWbot = async (whatsapp: Whatsapp): Promise<Session> => {
+export const initWbot = async (whatsapp: Whatsapp, req: Request): Promise<Session> => {
   return new Promise((resolve, reject) => {
     try {
       const io = getIO();
@@ -43,11 +45,11 @@ export const initWbot = async (whatsapp: Whatsapp): Promise<Session> => {
         sessionCfg = JSON.parse(whatsapp.session);
       }
 
-      const args:String = process.env.CHROME_ARGS || "";
+      const args: String = process.env.CHROME_ARGS || "";
 
       const wbot: Session = new Client({
         session: sessionCfg,
-        authStrategy: new LocalAuth({clientId: 'bd_'+whatsapp.id}),
+        authStrategy: new LocalAuth({ clientId: 'bd_' + whatsapp.id }),
         puppeteer: {
           executablePath: process.env.CHROME_BIN || undefined,
           // @ts-ignore
@@ -56,6 +58,7 @@ export const initWbot = async (whatsapp: Whatsapp): Promise<Session> => {
         }
       });
 
+      wbot.storeId = whatsapp.storeId;
       wbot.initialize();
 
       wbot.on("qr", async qr => {
@@ -108,7 +111,8 @@ export const initWbot = async (whatsapp: Whatsapp): Promise<Session> => {
         await whatsapp.update({
           status: "CONNECTED",
           qrcode: "",
-          retries: 0
+          retries: 0,
+          whatsappNumber: wbot.info.wid.user
         });
 
         io.emit("whatsappSession", {
@@ -123,7 +127,7 @@ export const initWbot = async (whatsapp: Whatsapp): Promise<Session> => {
         }
 
         wbot.sendPresenceAvailable();
-        await syncUnreadMessages(wbot);
+        await syncUnreadMessages(wbot, req);
 
         resolve(wbot);
       });

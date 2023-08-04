@@ -5,6 +5,7 @@ import { SerializeUser } from "../../helpers/SerializeUser";
 import User from "../../models/User";
 
 interface Request {
+  storeId: number
   email: string;
   password: string;
   name: string;
@@ -21,6 +22,7 @@ interface Response {
 }
 
 const CreateUserService = async ({
+  storeId,
   email,
   password,
   name,
@@ -55,6 +57,7 @@ const CreateUserService = async ({
 
   const user = await User.create(
     {
+      storeId,
       email,
       password,
       name,
