@@ -1,8 +1,11 @@
 import {
     Table,
     Column,
+<<<<<<< HEAD
     CreatedAt,
     UpdatedAt,
+=======
+>>>>>>> 8265a1d (comecei o templateControls, branch quebrada)
     Model,
     DataType,
     PrimaryKey,
@@ -10,8 +13,14 @@ import {
     BelongsTo,
 } from "sequelize-typescript";
 import Template from "./Template";
+<<<<<<< HEAD
 @Table({
     tableName: "templatecontrols",
+=======
+
+@Table({
+    tableName: "emplateControls",
+>>>>>>> 8265a1d (comecei o templateControls, branch quebrada)
 })
 class TemplateControls extends Model<TemplateControls> {
     @PrimaryKey
@@ -22,6 +31,7 @@ class TemplateControls extends Model<TemplateControls> {
     valor: string;
 
     @Column({ type: DataType.INTEGER })
+<<<<<<< HEAD
     choice: number;
 
     @CreatedAt
@@ -29,6 +39,9 @@ class TemplateControls extends Model<TemplateControls> {
 
     @UpdatedAt
     updatedAt: Date;
+=======
+    choice: number
+>>>>>>> 8265a1d (comecei o templateControls, branch quebrada)
 
     @ForeignKey(() => Template)
     @Column
