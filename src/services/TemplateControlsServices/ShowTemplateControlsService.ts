@@ -1,7 +1,7 @@
 import AppError from "../../errors/AppError";
-import TemplateItems from "../../models/TemplateItems";
+import TemplateItems from "../../models/TemplateControls";
 
-const ShowTemplateItemsService = async (templateItemsId: number): Promise<TemplateItems> => {
+const ShowTemplateControlsService = async (templateItemsId: number): Promise<TemplateItems> => {
     try {
         const templateItems = await TemplateItems.findByPk(templateItemsId);
 
@@ -16,4 +16,4 @@ const ShowTemplateItemsService = async (templateItemsId: number): Promise<Templa
     }
 };
 
-export default ShowTemplateItemsService;
+export default ShowTemplateControlsService;

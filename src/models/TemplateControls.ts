@@ -10,15 +10,18 @@ import {
 import Template from "./Template";
 
 @Table({
-    tableName: "templateItems",
+    tableName: "emplateControls",
 })
-class TemplateItems extends Model<TemplateItems> {
+class TemplateControls extends Model<TemplateControls> {
     @PrimaryKey
     @Column({ type: DataType.INTEGER })
     id: number;
 
     @Column({ type: DataType.TEXT })
-    item: string;
+    valor: string;
+
+    @Column({ type: DataType.INTEGER })
+    choice: number
 
     @ForeignKey(() => Template)
     @Column
@@ -28,4 +31,4 @@ class TemplateItems extends Model<TemplateItems> {
     template: Template
 }
 
-export default TemplateItems;
+export default TemplateControls;
