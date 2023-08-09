@@ -40,16 +40,18 @@ module.exports = {
                     condition: "2 dois segunda vender venda vende",
                     nextMessage: 4, storeId: 1
                 },
-                { id: 22, message: "Você está buscando um imóvel em qual faixa de valor?\n" +
-                "1- Acima de R$1 milhão \n" +
-                "2- 500 mil até 1 milhão\n" +
-                "3- 265 mil até 500 mil\n" +
-                "4- Abaixo de 265 Mil", lastMessage: 2 },
-                { id: 23, message: "Em quais regiões da cidade ou bairros são suas preferências? Digite abaixo", lastMessage: 22 },
-                { id: 4, message: "Qual a metragem do imóvel?", lastMessage: 3, condition: "1 um primeira chácara chacara 3 terceira tres três terreno", nextMessage: 6 },
-                { id: 5, message: "Qual a área construída do imóvel?", lastMessage: 3, condition: "2 ap apartamento segunda dois casa 4 quatro quarta", nextMessage: 6 },
-                { id: 6, message: "Qual a localização do imóvel?", lastMessage: 5 },
-                { id: 7, message: "O imóvel em questão está regularizado?", lastMessage: 6, nextMessage: 18 },
+                {
+                    id: 22, message: "Você está buscando um imóvel em qual faixa de valor?\n" +
+                        "1- Acima de R$1 milhão \n" +
+                        "2- 500 mil até 1 milhão\n" +
+                        "3- 265 mil até 500 mil\n" +
+                        "4- Abaixo de 265 Mil", lastMessage: 2, storeId: 1
+                },
+                { id: 23, message: "Em quais regiões da cidade ou bairros são suas preferências? Digite abaixo", lastMessage: 22, storeId: 1 },
+                { id: 4, message: "Qual a metragem do imóvel?", lastMessage: 3, condition: "1 um primeira chácara chacara 3 terceira tres três terreno", nextMessage: 6, storeId: 1 },
+                { id: 5, message: "Qual a área construída do imóvel?", lastMessage: 3, condition: "2 ap apartamento segunda dois casa 4 quatro quarta", nextMessage: 6, storeId: 1 },
+                { id: 6, message: "Qual a localização do imóvel?", lastMessage: 5, storeId: 1 },
+                { id: 7, message: "O imóvel em questão está regularizado?", lastMessage: 6, nextMessage: 18, storeId: 1 },
                 {
                     id: 8,
                     message: "Ok, por favor me envie os seguintes dados para prosseguir o atendimento.\n" +
@@ -76,22 +78,15 @@ module.exports = {
                         "3- Cessão de direto de imóvel adquirido.",
                     lastMessage: 14, storeId: 1
                 },
-<<<<<<< HEAD:src/database/seeds/20200904070004-create-default-templates.ts
-                { id: 17, message: "Obrigado pela cooperação, a Gabriela do setor de vendas recebeu um relatório sobre o que você precisa e retornará seu contato o quanto antes.", lastMessage: 23, queueId: 2 },
-                { id: 18, message: "Obrigado pela cooperação, a Gabriela do setor de compras recebeu um relatório sobre o que você precisa e retornará seu contato o quanto antes.", lastMessage: 8, queueId: 3 },
-                { id: 19, message: "Obrigado pela cooperação, a Débora do setor de finanças recebeu um relatório sobre o que você precisa e retornará seu contato o quanto antes.", lastMessage: 11, queueId: 4 },
-                { id: 20, message: "Obrigado pela cooperação, a Ângela do setor de jurídico recebeu um relatório sobre o que você precisa e retornará seu contato o quanto antes.", lastMessage: 15, condition: " 1 renegociacao renegociação renegociaçao renegociacão iniciar processo 2", queueId: 5 },
-=======
-                { id: 17, message: "Obrigado pela cooperação, a Gabriela do setor de vendas recebeu um relatório sobre o que você precisa e retornará seu contato o quanto antes.", lastMessage: 2, queueId: 2, storeId: 1 },
+                { id: 17, message: "Obrigado pela cooperação, a Gabriela do setor de vendas recebeu um relatório sobre o que você precisa e retornará seu contato o quanto antes.", lastMessage: 23, queueId: 2, storeId: 1 },
                 { id: 18, message: "Obrigado pela cooperação, a Gabriela do setor de compras recebeu um relatório sobre o que você precisa e retornará seu contato o quanto antes.", lastMessage: 8, queueId: 3, storeId: 1 },
                 { id: 19, message: "Obrigado pela cooperação, a Débora do setor de finanças recebeu um relatório sobre o que você precisa e retornará seu contato o quanto antes.", lastMessage: 11, queueId: 4, storeId: 1 },
                 { id: 20, message: "Obrigado pela cooperação, a Ângela do setor de jurídico recebeu um relatório sobre o que você precisa e retornará seu contato o quanto antes.", lastMessage: 15, condition: " 1 renegociacao renegociação renegociaçao renegociacão iniciar processo 2", queueId: 5, storeId: 1 },
->>>>>>> 6e9e108 (preciso do user.storeId nao terminei):src/database/seeds/20200904070004-create-default-template.ts
                 {
                     id: 21, message: "Obrigado pela cooperação, a Gabriela recebeu um relatório sobre o que você precisa e retornará seu contato para tratar da cessão de direito do imóvel o quanto antes.",
                     lastMessage: 15, condition: " 3 cessão direto imóvel adquirido imovel ", queueId: 5, storeId: 1
                 },
-                { id: 22, message: "mensagem teste da loja 2, se isso foi enviado ou passou no seletor de mensagem vc falhou", lastMessage: 21, condition: "teste teste teste", queueId: 6, storeId: 2 }
+                { id: 23, message: "mensagem teste da loja 2, se isso foi enviado ou passou no seletor de mensagem vc falhou", lastMessage: 21, condition: "teste teste teste", queueId: 6, storeId: 2 }
             ],
             {}
         );
