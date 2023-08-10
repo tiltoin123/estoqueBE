@@ -25,7 +25,11 @@ export const index = async (req: Request, res: Response): Promise<Response> => {
     searchParam,
     pageNumber
 
+
   });
+
+
+
   return res.json({ users, count, hasMore });
 };
 

@@ -23,7 +23,7 @@ import { debounce } from "../../helpers/Debounce";
 import UpdateTicketService from "../TicketServices/UpdateTicketService";
 import CreateContactService from "../ContactServices/CreateContactService";
 import formatBody from "../../helpers/Mustache";
-import templateSelector from "../TemplateServices/TemplateSelector";
+import templateSelector from "../../helpers/TemplateSelector";
 import { Request } from "express";
 import GetWhatsAppByPhoneNumber from "../WhatsappService/GetWhatsAppByPhoneNumber";
 

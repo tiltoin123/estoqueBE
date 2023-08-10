@@ -1,11 +1,11 @@
-import Contact from "../../models/Contact"
-import GetLastMessageReceived from "../MessageServices/GetLastMessageReceived"
-import GetLastMessageSent from "../MessageServices/GetLastMessageSent"
-import ListTemplatesService from "./ListTemplatesService"
-import ShowTemplatesService from "./ShowTemplatesService"
+import Contact from "../models/Contact"
+import GetLastMessageReceived from "../services/MessageServices/GetLastMessageReceived"
+import GetLastMessageSent from "../services/MessageServices/GetLastMessageSent"
+import ListTemplatesService from "../services/TemplateServices/ListTemplatesService"
+import ShowTemplatesService from "../services/TemplateServices/ShowTemplatesService"
+import templateAssembler from "./TemplateAssembler";
 
 const templateSelector = async (contact: Contact) => {
-
     let lastReceivedMessage = await GetLastMessageReceived(contact)
     let templates = await ListTemplatesService(contact.storeId)
     let lastSentMessage = await GetLastMessageSent(contact)
@@ -17,17 +17,17 @@ const templateSelector = async (contact: Contact) => {
             let words = lastReceivedMessage.body.toLowerCase().split(' ');
             if (testTemplate.lastMessage === lastSentTemplate.id || testTemplate.id === lastSentTemplate.nextMessage) {
                 if (!currentCondition) {
-                    return testTemplate
+                    return templateAssembler(testTemplate);
                 }
                 let conditionWords = currentCondition.toLowerCase().split(' ');
                 let match = conditionWords.some(conditionWord => words.some(word => word === conditionWord)) ? true : false;
                 if (match) {
-                    return testTemplate;
+                    return templateAssembler(testTemplate);
                 }
             }
         }
     }
-    return templates[0];
+    return templateAssembler(templates[0]);
 }
 
 export default templateSelector;

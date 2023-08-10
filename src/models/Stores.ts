@@ -4,16 +4,9 @@ import {
     CreatedAt,
     UpdatedAt,
     Model,
-    DataType,
-    BeforeCreate,
-    BeforeUpdate,
     PrimaryKey,
     AutoIncrement,
-    Default,
     HasMany,
-    BelongsToMany,
-    ForeignKey,
-    BelongsTo,
     AllowNull,
     Unique
 } from "sequelize-typescript";

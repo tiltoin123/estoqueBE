@@ -27,7 +27,7 @@ module.exports = {
                         "7- Área",
                     lastMessage: 1,
                     condition: "1 um primeiro comprar compra",
-                    nextMessage: 17, storeId: 1
+                    storeId: 1
                 },
                 {
                     id: 3,
@@ -38,7 +38,7 @@ module.exports = {
                         "4- Casa\n",
                     lastMessage: 1,
                     condition: "2 dois segunda vender venda vende",
-                    nextMessage: 4, storeId: 1
+                    storeId: 1
                 },
                 {
                     id: 22, message: "Você está buscando um imóvel em qual faixa de valor?\n" +
@@ -57,11 +57,11 @@ module.exports = {
                     message: "Ok, por favor me envie os seguintes dados para prosseguir o atendimento.\n" +
                         "Qual seu nome completo?",
                     condition: "3 financeiro finanças financas debora débora atraso antecipação antecipacao boleto",
-                    lastMessage: 1, nextMessage: 18, storeId: 1
+                    lastMessage: 1, storeId: 1
                 },
                 { id: 9, message: "Qual o loteamento do imóvel?", lastMessage: 8, storeId: 1 },
                 { id: 10, message: "Qual a quadra e o lote do imóvel em questão?", lastMessage: 9, storeId: 1 },
-                { id: 11, message: "Qual a assunto deseja tratar com o financeiro(boletos perdidos ou atrasados, antecipação de parcelas, reimpressão?", lastMessage: 10, nextMessage: 19, storeId: 1 },
+                { id: 11, message: "Qual a assunto deseja tratar com o financeiro(boletos perdidos ou atrasados, antecipação de parcelas, reimpressão?", lastMessage: 10, storeId: 1 },
                 {
                     id: 12,
                     message: "Então você quer falar com alguém do setor jurídico, por favor me envie alguns dados para prosseguir o atendimento.\n" +
