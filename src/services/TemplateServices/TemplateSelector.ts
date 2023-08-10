@@ -10,11 +10,6 @@ const templateSelector = async (contact: Contact) => {
     let templates = await ListTemplatesService(contact.storeId)
     let lastSentMessage = await GetLastMessageSent(contact)
     let lastSentTemplate = await ShowTemplatesService(lastSentMessage ? lastSentMessage.templateId : 1)
-    //console.log("ultima recebida", lastReceivedMessage?.body)
-    //console.log("contact", contact.storeId, contact.id)
-    //console.log("lastSentMessage", lastSentMessage)
-    //console.log("tempalte selecuiasheuasheuasehu", contact.number)
-    //console.log("last Sent template", lastSentMessage)
     if (lastReceivedMessage && lastSentMessage) {
         for (let i = 0; i < templates.length; i++) {
             let testTemplate = templates[i];

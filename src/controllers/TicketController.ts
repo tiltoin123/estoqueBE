@@ -108,7 +108,6 @@ export const update = async (
       });
     }
   }
-  console.log("tickertcontroleer pas1 @#$@#$@#$@#@#$@#$")
   return res.status(200).json(ticket);
 };
 

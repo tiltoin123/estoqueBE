@@ -27,30 +27,23 @@ const UpdateTicketService = async ({
   ticketId
 }: Request): Promise<Response> => {
   const { status, userId, queueId, whatsappId } = ticketData;
-  console.log("updateticket pas1 @#$@#$@#$@#@#$@#$@#$@#$")
   const ticket = await ShowTicketService(ticketId);
-  console.log("updateticket pas2 @#$@#$@#$@#@#$@#$")
   await SetTicketMessagesAsRead(ticket);
-  console.log("updateticket pas3 @#$@#$@#$@#@#$@#$")
   if (whatsappId && ticket.whatsappId !== whatsappId) {
     await CheckContactOpenTickets(ticket.contactId, whatsappId);
   }
 
   const oldStatus = ticket.status;
-  console.log("updateticket pas4 @#$@#$@#$@#@#$@#$")
   const oldUserId = ticket.user?.id;
 
   if (oldStatus === "closed") {
     await CheckContactOpenTickets(ticket.contact.id, ticket.whatsappId);
   }
-  console.log("updateticket pas5 @#$@#$@#$@#@#$@#$")
   await ticket.update({
     status,
     queueId,
     userId
   });
-  console.log("updateticket pas6 @#$@#$@#$@#@#$@#$")
-
   if (whatsappId) {
     await ticket.update({
       whatsappId
@@ -58,7 +51,6 @@ const UpdateTicketService = async ({
   }
 
   await ticket.reload();
-  console.log("updateticket pas7 @##$123123123%#$%#")
   const io = getIO();
 
   if (ticket.status !== oldStatus || ticket.user?.id !== oldUserId) {
@@ -68,8 +60,6 @@ const UpdateTicketService = async ({
     });
   }
 
-
-  console.log("updateticket pas8 @456745654#$@#$@#$@#@#$@#$")
   io.to(ticket.status)
     .to("notification")
     .to(ticketId.toString())

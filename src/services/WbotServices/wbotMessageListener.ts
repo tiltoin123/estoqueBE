@@ -207,9 +207,8 @@ const verifyQueue = async (
   queueId: null | number
 ) => {
   const { queues, greetingMessage } = await ShowWhatsAppService(wbot.id!);
-  //recupera dados sobre as filas disponiveis e mensagem de boas vindas.
 
-  if (queues.length === 1) {// se tiver apenas uma fila o ticket sera colocado nela
+  if (queues.length === 1) {
     await UpdateTicketService({
       ticketData: { queueId: queues[0].id },
       ticketId: ticket.id
@@ -219,7 +218,6 @@ const verifyQueue = async (
   }
 
   if (queueId) {
-    console.log("fila atualizada:", queueId)
     await UpdateTicketService({
       ticketData: { queueId: queueId },
       ticketId: ticket.id
