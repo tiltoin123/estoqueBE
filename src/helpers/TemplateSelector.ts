@@ -10,7 +10,6 @@ const templateSelector = async (contact: Contact) => {
     let templates = await ListTemplatesService(contact.storeId)
     let lastSentMessage = await GetLastMessageSent(contact)
     let lastSentTemplate = await ShowTemplatesService(lastSentMessage ? lastSentMessage.templateId : 1)
-<<<<<<< HEAD
     if (lastReceivedMessage && lastSentMessage) {
         for (let i = 0; i < templates.length; i++) {
             let testTemplate = templates[i];
@@ -23,31 +22,13 @@ const templateSelector = async (contact: Contact) => {
                 }
                 if (conditionWord === words) {
                     return await templateAssembler(testTemplate);
-=======
-
-    if (lastReceivedMessage && lastSentMessage) {
-        for (let i = 0; i < templates.length; i++) {
-            let testTemplate = templates[i];
-            let currentCondition = testTemplate.condition ? testTemplate.condition : false;
-            let words = lastReceivedMessage.body.toLowerCase().split(' ');
-            if (testTemplate.lastMessage === lastSentTemplate.id || testTemplate.id === lastSentTemplate.nextMessage) {
-                if (!currentCondition) {
-                    return templateAssembler(testTemplate);
-                }
-                let conditionWords = currentCondition.toLowerCase().split(' ');
-                let match = conditionWords.some(conditionWord => words.some(word => word === conditionWord)) ? true : false;
-                if (match) {
-                    return templateAssembler(testTemplate);
->>>>>>> 8265a1d (comecei o templateControls, branch quebrada)
                 }
             }
         }
     }
-<<<<<<< HEAD
+
     return await templateAssembler(templates[0]);
-=======
-    return templateAssembler(templates[0]);
->>>>>>> 8265a1d (comecei o templateControls, branch quebrada)
+
 }
 
 export default templateSelector;

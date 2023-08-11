@@ -5,10 +5,6 @@ module.exports = {
         return queryInterface.createTable("TemplateControls", {
             id: {
                 type: DataTypes.INTEGER,
-<<<<<<< HEAD
-=======
-                autoIncrement: true,
->>>>>>> 8265a1d (comecei o templateControls, branch quebrada)
                 primaryKey: true,
                 allowNull: false
             },
@@ -17,29 +13,16 @@ module.exports = {
                 allowNull: false
             },
             choice: {
-<<<<<<< HEAD
                 type: DataTypes.STRING,
                 allowNull: true
-=======
-                type: DataTypes.INTEGER,
-                allowNull: false
->>>>>>> 8265a1d (comecei o templateControls, branch quebrada)
             },
             createdAt: {
                 type: DataTypes.DATE,
-                allowNull: false,
-<<<<<<< HEAD
-=======
-                defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
->>>>>>> 8265a1d (comecei o templateControls, branch quebrada)
+                allowNull: false
             },
             updatedAt: {
                 type: DataTypes.DATE,
                 allowNull: false,
-<<<<<<< HEAD
-=======
-                defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
->>>>>>> 8265a1d (comecei o templateControls, branch quebrada)
             },
             templateId: {
                 type: DataTypes.INTEGER,
