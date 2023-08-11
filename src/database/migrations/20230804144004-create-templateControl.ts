@@ -5,7 +5,6 @@ module.exports = {
         return queryInterface.createTable("TemplateControls", {
             id: {
                 type: DataTypes.INTEGER,
-                autoIncrement: true,
                 primaryKey: true,
                 allowNull: false
             },
@@ -14,18 +13,16 @@ module.exports = {
                 allowNull: false
             },
             choice: {
-                type: DataTypes.INTEGER,
-                allowNull: false
+                type: DataTypes.STRING,
+                allowNull: true
             },
             createdAt: {
                 type: DataTypes.DATE,
                 allowNull: false,
-                defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
             },
             updatedAt: {
                 type: DataTypes.DATE,
                 allowNull: false,
-                defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
             },
             templateId: {
                 type: DataTypes.INTEGER,

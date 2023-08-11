@@ -3,7 +3,7 @@ import AppError from "../../errors/AppError";
 
 const ListTemplatesService = async (storeId: number): Promise<Template[]> => {
     const template = await Template.findAll({
-        attributes: ["id", "message", "lastMessage", "nextMessage", "condition", "queueId"],
+        attributes: ["id", "message", "lastMessage", "condition", "queueId"],
         where: {
             storeId,
         }

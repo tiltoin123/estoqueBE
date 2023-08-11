@@ -16,10 +16,6 @@ module.exports = {
                 type: DataTypes.INTEGER,
                 defaultValue: null
             },
-            nextMessage: {
-                type: DataTypes.INTEGER,
-                defaultValue: null
-            },
             condition: {
                 type: DataTypes.STRING,
                 defaultValue: null
