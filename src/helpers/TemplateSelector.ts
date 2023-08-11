@@ -10,31 +10,22 @@ const templateSelector = async (contact: Contact) => {
     let templates = await ListTemplatesService(contact.storeId)
     let lastSentMessage = await GetLastMessageSent(contact)
     let lastSentTemplate = await ShowTemplatesService(lastSentMessage ? lastSentMessage.templateId : 1)
-<<<<<<< HEAD
-=======
-
-    console.log(templates[0].message)
->>>>>>> e2755df (model templatecontrols quebrado)
     if (lastReceivedMessage && lastSentMessage) {
         for (let i = 0; i < templates.length; i++) {
             let testTemplate = templates[i];
-            let currentCondition = testTemplate.condition ? testTemplate.condition : false;
-            let words = lastReceivedMessage.body.toLowerCase().split(' ');
-            if (testTemplate.lastMessage === lastSentTemplate.id) {
-                if (!currentCondition) {
-                    console.log("sem condition", testTemplate.id)
+            let currentCondition = testTemplate.condition ? testTemplate.condition.toString() : false;
+            let conditionWord = currentCondition ? currentCondition.toLowerCase() : false
+            let words = lastReceivedMessage.body.toString().toLowerCase();
+            if (testTemplate.lastMessage == lastSentTemplate.id) {
+                if (!conditionWord) {
                     return await templateAssembler(testTemplate);
                 }
-                let conditionWords = currentCondition.toLowerCase().split(' ');
-                let match = conditionWords === words ? true : false;
-                if (match) {
-                    console.log("com condition", testTemplate.id)
+                if (conditionWord === words) {
                     return await templateAssembler(testTemplate);
                 }
             }
         }
     }
-    console.log("primeira mensagem", templates[0].id)
     return await templateAssembler(templates[0]);
 }
 

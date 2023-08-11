@@ -3,7 +3,6 @@ import ListTemplateControlsService from "../services/TemplateControlsServices/Li
 
 const templateAssembler = async (template: Template): Promise<Template> => {
     let templateControls = await ListTemplateControlsService(template.id)
-    console.log(templateControls, "templateControls por tempalte")
     if (templateControls) {
         template.message = template.message + "\n"
         templateControls.forEach(element => {
