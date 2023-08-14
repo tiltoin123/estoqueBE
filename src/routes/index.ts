@@ -13,6 +13,7 @@ import quickAnswerRoutes from "./quickAnswerRoutes";
 import apiRoutes from "./apiRoutes";
 import templatesRoutes from "./templateRoutes";
 import storeRoutes from "./storeRoutes";
+import templateControlsRoutes from "./templateControlsRoutes";
 
 const routes = Router();
 
@@ -29,5 +30,6 @@ routes.use(quickAnswerRoutes);
 routes.use("/api/messages", apiRoutes);
 routes.use(templatesRoutes);
 routes.use(storeRoutes);
+routes.use(templateControlsRoutes);
 
 export default routes;

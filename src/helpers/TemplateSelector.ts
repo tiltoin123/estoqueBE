@@ -13,21 +13,20 @@ const templateSelector = async (contact: Contact) => {
     if (lastReceivedMessage && lastSentMessage) {
         for (let i = 0; i < templates.length; i++) {
             let testTemplate = templates[i];
-            let currentCondition = testTemplate.condition ? testTemplate.condition : false;
-            let words = lastReceivedMessage.body.toLowerCase().split(' ');
-            if (testTemplate.lastMessage === lastSentTemplate.id || testTemplate.id === lastSentTemplate.nextMessage) {
-                if (!currentCondition) {
-                    return templateAssembler(testTemplate);
+            let currentCondition = testTemplate.condition ? testTemplate.condition.toString() : false;
+            let conditionWord = currentCondition ? currentCondition.toLowerCase() : false
+            let words = lastReceivedMessage.body.toString().toLowerCase();
+            if (testTemplate.lastMessage == lastSentTemplate.id) {
+                if (!conditionWord) {
+                    return await templateAssembler(testTemplate);
                 }
-                let conditionWords = currentCondition.toLowerCase().split(' ');
-                let match = conditionWords.some(conditionWord => words.some(word => word === conditionWord)) ? true : false;
-                if (match) {
-                    return templateAssembler(testTemplate);
+                if (conditionWord === words) {
+                    return await templateAssembler(testTemplate);
                 }
             }
         }
     }
-    return templateAssembler(templates[0]);
+    return await templateAssembler(templates[0]);
 }
 
 export default templateSelector;

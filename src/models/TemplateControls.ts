@@ -1,6 +1,8 @@
 import {
     Table,
     Column,
+    CreatedAt,
+    UpdatedAt,
     Model,
     DataType,
     PrimaryKey,
@@ -8,9 +10,8 @@ import {
     BelongsTo,
 } from "sequelize-typescript";
 import Template from "./Template";
-
 @Table({
-    tableName: "emplateControls",
+    tableName: "templatecontrols",
 })
 class TemplateControls extends Model<TemplateControls> {
     @PrimaryKey
@@ -21,7 +22,13 @@ class TemplateControls extends Model<TemplateControls> {
     valor: string;
 
     @Column({ type: DataType.INTEGER })
-    choice: number
+    choice: number;
+
+    @CreatedAt
+    createdAt: Date;
+
+    @UpdatedAt
+    updatedAt: Date;
 
     @ForeignKey(() => Template)
     @Column

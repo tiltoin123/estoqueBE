@@ -24,9 +24,6 @@ class Template extends Model<Template> {
     @Column({ type: DataType.INTEGER, defaultValue: null })
     lastMessage: number | null;
 
-    @Column({ type: DataType.INTEGER, defaultValue: null })
-    nextMessage: number | null;
-
     @Column({ type: DataType.STRING, defaultValue: null })
     condition: string | null;
 

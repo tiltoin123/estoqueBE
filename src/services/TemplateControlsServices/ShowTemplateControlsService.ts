@@ -1,15 +1,16 @@
 import AppError from "../../errors/AppError";
-import TemplateItems from "../../models/TemplateControls";
+import TemplateControls from "../../models/TemplateControls";
 
-const ShowTemplateControlsService = async (templateItemsId: number): Promise<TemplateItems> => {
+
+const ShowTemplateControlsService = async (templateControlsId: number): Promise<TemplateControls> => {
     try {
-        const templateItems = await TemplateItems.findByPk(templateItemsId);
+        const templateControls = await TemplateControls.findByPk(templateControlsId);
 
-        if (!templateItems) {
-            throw new AppError("ERR_NO_TEMPLATE_ITEMS_FOUND", 404);
+        if (!templateControls) {
+            throw new AppError("ERR_NO_TEMPLATE_CONTROLS_FOUND", 404);
         }
 
-        return templateItems;
+        return templateControls;
     } catch (error) {
         // Handle the error here or rethrow it if needed
         throw error;

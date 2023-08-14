@@ -12,6 +12,7 @@ import UserQueue from "../models/UserQueue";
 import QuickAnswer from "../models/QuickAnswer";
 import Template from "../models/Template";
 import Store from "../models/Stores";
+import TemplateControls from "../models/TemplateControls";
 
 // eslint-disable-next-line
 const dbConfig = require("../config/database");
@@ -32,7 +33,8 @@ const models = [
   UserQueue,
   QuickAnswer,
   Template,
-  Store
+  Store,
+  TemplateControls
 ];
 
 sequelize.addModels(models);
