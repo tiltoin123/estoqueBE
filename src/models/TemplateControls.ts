@@ -10,6 +10,7 @@ import {
     BelongsTo,
 } from "sequelize-typescript";
 import Template from "./Template";
+
 @Table({
     tableName: "templatecontrols",
 })
@@ -22,7 +23,7 @@ class TemplateControls extends Model<TemplateControls> {
     valor: string;
 
     @Column({ type: DataType.INTEGER })
-    choice: number;
+    choice: string;
 
     @CreatedAt
     createdAt: Date;

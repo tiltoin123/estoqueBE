@@ -329,7 +329,9 @@ const handleMessage = async (
     if (!msg.fromMe && ticket.status === "open") {
       verifyMessage(msg, ticket, contact, storeId)
     }
-
+    if (msg.hasMedia) {
+      verifyMediaMessage(msg, ticket, storeId)
+    }
     if (
       !ticket.queue &&
       !chat.isGroup &&

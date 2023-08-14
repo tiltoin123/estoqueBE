@@ -27,6 +27,7 @@ const templateSelector = async (contact: Contact) => {
         }
     }
     return await templateAssembler(templates[0]);
+
 }
 
 export default templateSelector;

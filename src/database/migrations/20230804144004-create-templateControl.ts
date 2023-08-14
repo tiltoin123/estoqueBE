@@ -18,7 +18,7 @@ module.exports = {
             },
             createdAt: {
                 type: DataTypes.DATE,
-                allowNull: false,
+                allowNull: false
             },
             updatedAt: {
                 type: DataTypes.DATE,
