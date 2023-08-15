@@ -10,9 +10,7 @@ import {
 import Queue from "./Queue";
 import Store from "./Stores";
 
-@Table({
-    tableName: "template",
-})
+@Table
 class Template extends Model<Template> {
     @PrimaryKey
     @Column({ type: DataType.INTEGER })
