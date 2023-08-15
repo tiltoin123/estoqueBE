@@ -11,7 +11,9 @@ import {
 } from "sequelize-typescript";
 import Template from "./Template";
 
-@Table
+@Table({
+    tableName: "TemplateControls",
+})
 class TemplateControls extends Model<TemplateControls> {
     @PrimaryKey
     @Column({ type: DataType.INTEGER })
