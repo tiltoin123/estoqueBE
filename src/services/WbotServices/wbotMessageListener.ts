@@ -26,6 +26,8 @@ import formatBody from "../../helpers/Mustache";
 import templateSelector from "../../helpers/TemplateSelector";
 import { Request } from "express";
 import GetWhatsAppByPhoneNumber from "../WhatsappService/GetWhatsAppByPhoneNumber";
+import GetLastMessageSent from "../MessageServices/GetLastMessageSent";
+import Template from "../../models/Template";
 
 interface Session extends Client {
   id?: number;
@@ -242,6 +244,23 @@ const isValidMsg = (msg: WbotMessage): boolean => {
   return false;
 };
 
+const handleInvalidOption = async (
+  wbot: Session,
+  contact: Contact,
+  messageToSend: Template,
+  ticket: Ticket,
+  storeId: number
+) => {
+  let lastSentMessage = await GetLastMessageSent(contact);
+  let currentTemplateId = messageToSend.id
+  let lastTemplateId = lastSentMessage ? lastSentMessage.templateId : null;
+  let invalidOption = "Opa, opção inválida por favor responda com o número que corresponde a opção desejada.🤖";
+  if (lastTemplateId && currentTemplateId === lastTemplateId) {
+    let optionEnforcer = await wbot.sendMessage(`${contact.number}@c.us`, invalidOption);
+    await verifyMessageSent(optionEnforcer, ticket, contact, 1, storeId);
+  }
+};
+
 const handleMessage = async (
   msg: WbotMessage,
   wbot: Session,
@@ -312,8 +331,8 @@ const handleMessage = async (
       await verifyMessage(msg, ticket, contact, storeId)
       if (msg.type === "chat" && !chat.isGroup && !msg.hasMedia) {
         let messageToSend = await templateSelector(contact)
+        await handleInvalidOption(wbot, contact, messageToSend, ticket, storeId)
         const sentMessage = await wbot.sendMessage(
-          //`${5516992150105}@c.us`,
           `${contact.number}@c.us`,
           messageToSend.message
         );

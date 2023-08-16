@@ -13,7 +13,6 @@ const ShowTemplateControlsService = async (templateControlsId: number): Promise<
         return templateControls;
 
     } catch (error) {
-        // Handle the error here or rethrow it if needed
         throw error;
     }
 };

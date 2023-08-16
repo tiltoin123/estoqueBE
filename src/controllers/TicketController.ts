@@ -58,7 +58,6 @@ export const index = async (req: Request, res: Response): Promise<Response> => {
     queueIds,
     withUnreadMessages
   });
-  //console.log("ticket controller linha 59 req.user.storeId",req.user.storeId)
   return res.status(200).json({ tickets, count, hasMore });
 };
 

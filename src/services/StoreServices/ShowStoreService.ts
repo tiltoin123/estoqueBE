@@ -11,7 +11,6 @@ const ShowStoreService = async (storeId: number): Promise<Store> => {
 
         return store;
     } catch (error) {
-        // Handle the error here or rethrow it if needed
         throw error;
     }
 };

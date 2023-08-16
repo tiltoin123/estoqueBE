@@ -4,6 +4,7 @@ import GetLastMessageSent from "../services/MessageServices/GetLastMessageSent"
 import ListTemplatesService from "../services/TemplateServices/ListTemplatesService"
 import ShowTemplatesService from "../services/TemplateServices/ShowTemplatesService"
 import templateAssembler from "./TemplateAssembler";
+import CountTemplateControlsService from "../services/TemplateControlsServices/CountTemplateControlsService"
 
 const templateSelector = async (contact: Contact) => {
     let lastReceivedMessage = await GetLastMessageReceived(contact)
@@ -20,8 +21,14 @@ const templateSelector = async (contact: Contact) => {
                 if (!conditionWord) {
                     return await templateAssembler(testTemplate);
                 }
-                if (conditionWord === words) {
-                    return await templateAssembler(testTemplate);
+                if (conditionWord) {
+                    let countControls = await (await CountTemplateControlsService(testTemplate.id)).toString()
+                    if (conditionWord === words) {
+                        return await templateAssembler(testTemplate);
+                    }
+                    if (conditionWord !== words && words === countControls) {
+                        return await templateAssembler(lastSentTemplate)
+                    }
                 }
             }
         }

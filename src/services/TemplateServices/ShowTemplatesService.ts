@@ -11,7 +11,6 @@ const ShowTemplatesService = async (templateId: number): Promise<Template> => {
 
         return template;
     } catch (error) {
-        // Handle the error here or rethrow it if needed
         throw error;
     }
 };
