@@ -44,7 +44,7 @@ class Message extends Model<Message> {
   @Column(DataType.STRING)
   get mediaUrl(): string | null {
     if (this.getDataValue("mediaUrl")) {
-      return `${process.env.BACKEND_URL}:${process.env.PROXY_PORT
+      return `${process.env.BACKEND_URL}
         }/public/${this.getDataValue("mediaUrl")}`;
     }
     return null;
