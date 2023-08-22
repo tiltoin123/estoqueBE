@@ -4,30 +4,14 @@ import GetLastMessageSent from "../services/MessageServices/GetLastMessageSent"
 import ListTemplatesService from "../services/TemplateServices/ListTemplatesService"
 import ShowTemplatesService from "../services/TemplateServices/ShowTemplatesService"
 import templateAssembler from "./TemplateAssembler";
-import ListTemplateControlsService from "../services/TemplateControlsServices/ListTemplateControlsService"
-import SaveOrUpdateContactFullName from "./SaveOrUpdateContactFullName"
-import GetContactFullNameService from "../services/ContactCustomFieldServices/GetContactFullNameService"
+import CountTemplateControlsService from "../services/TemplateControlsServices/CountTemplateControlsService"
 
 const templateSelector = async (contact: Contact) => {
     let lastReceivedMessage = await GetLastMessageReceived(contact)
     let templates = await ListTemplatesService(contact.storeId)
     let lastSentMessage = await GetLastMessageSent(contact)
     let lastSentTemplate = await ShowTemplatesService(lastSentMessage ? lastSentMessage.templateId : 1)
-    /*     let customFields = await GetContactFullNameService(contact.id)
-        let fullName = customFields ? customFields : false */
     if (lastReceivedMessage && lastSentMessage) {
-        /*         console.log("fullname", fullName)
-                if (!fullName) {
-                    console.log("lasttemplateId", lastSentTemplate.id, typeof (lastSentTemplate.id))
-                    if (lastSentTemplate.id === 24) {
-                        let newFullName = lastReceivedMessage.body.toString()
-                        let contactId = contact.id
-                        console.log("tentou atualizar", newFullName, "contactID", contactId)
-                        await SaveOrUpdateContactFullName(contactId, newFullName)
-                        return await templateAssembler(templates[24])
-                    }
-                    return await templateAssembler(templates[23])
-                } */
         for (let i = 0; i < templates.length; i++) {
             let testTemplate = templates[i];
             let currentCondition = testTemplate.condition ? testTemplate.condition.toString() : false;
@@ -38,17 +22,17 @@ const templateSelector = async (contact: Contact) => {
                     return await templateAssembler(testTemplate);
                 }
                 if (conditionWord) {
-                    let countOptions = await ListTemplateControlsService(lastSentTemplate.id)
-                    let count = countOptions.length
-                    let countControls = count.toString()
-                    console.log("opções", JSON.stringify(countOptions, null, 2))
+                    let countControls = await CountTemplateControlsService(lastSentTemplate.id)
+                    console.log("count controls", countControls)
+                    console.log("condition word", conditionWord)
+                    const regex = /^[12345679]+$/;
+                    const stringToTest = "12345679";
+                    const isMatch = regex.test(stringToTest);
+                    const wordValue = parseInt(words)
                     if (conditionWord === words) {
                         return await templateAssembler(testTemplate);
                     }
-                    if (conditionWord !== words && words === countControls) {
-                        console.log("conditionWord última opção do template?", conditionWord)
-                        console.log("words input do usuario", words)
-                        console.log("countControls total de opções possiveis", countControls)
+                    if (isMatch === false || wordValue > countControls) {
                         return await templateAssembler(lastSentTemplate)
                     }
                 }
