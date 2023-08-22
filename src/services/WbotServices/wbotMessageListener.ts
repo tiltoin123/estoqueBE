@@ -148,7 +148,7 @@ const verifyMessage = async (
     storeId: storeId,
     ticketId: ticket.id,
     contactId: msg.fromMe ? undefined : contact.id,
-    templateId: 1,
+    templateId: null,
     from: msg.from.replace(/[^0-9]/g, ""),
     to: msg.to.replace(/[^0-9]/g, ""),
     body: msg.body,
@@ -167,7 +167,7 @@ const verifyMessageSent = async (
   msg: WbotMessage,
   ticket: Ticket,
   contact: Contact,
-  templateId: number,
+  templateId: number | null,
   storeId: number
 ) => {
   if (msg.type === 'location')
@@ -178,7 +178,7 @@ const verifyMessageSent = async (
     storeId: storeId,
     ticketId: ticket.id,
     contactId: msg.fromMe ? undefined : contact.id,
-    templateId: templateId ? templateId : 1,
+    templateId: templateId ? templateId : null,
     from: msg.from.replace(/[^0-9]/g, ""),
     to: msg.to.replace(/[^0-9]/g, ""),
     body: msg.body,

@@ -2,15 +2,7 @@ import { QueryInterface } from "sequelize";
 
 const queueData = [
     {
-        name: "Atendimento",
-        color: "#008b02",
-        greetingMessage: "",
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        storeId: 1,
-    },
-    {
-        name: "Canal de Vendas",
+        name: "Vendas",
         color: "#004dcf",
         greetingMessage: "Seja Bem Vindo ao Canal de Vendas.",
         createdAt: new Date(),
@@ -18,7 +10,7 @@ const queueData = [
         storeId: 1,
     },
     {
-        name: "Canal de Compras",
+        name: "Compras",
         color: "#0000FF",
         greetingMessage: "Seja Bem Vindo ao Canal de Compras.",
         createdAt: new Date(),
@@ -26,7 +18,7 @@ const queueData = [
         storeId: 1,
     },
     {
-        name: "Canal de Finanças",
+        name: "Boletos",
         color: "#48D1CC",
         greetingMessage: "Seja Bem Vindo ao Canal de Finanças.",
         createdAt: new Date(),
@@ -34,20 +26,36 @@ const queueData = [
         storeId: 1,
     },
     {
-        name: "Canal Jurídico",
-        color: "#00FF00",
-        greetingMessage: "Seja Bem Vindo ao Canal Jurídico.",
+        name: "Transferência de lotes",
+        color: "#65FE41",
+        greetingMessage: "Seja Bem Vindo ao Canal de Transferência.",
         createdAt: new Date(),
         updatedAt: new Date(),
         storeId: 1,
     },
     {
-        name: "Fila Teste da Imobiliária Teste",
-        color: "#00FFF0",
-        greetingMessage: "se essa mensagem ta aparecendo na store 1 vc falhou",
+        name: "Renegociação de parcelas",
+        color: "#0123F0",
+        greetingMessage: "Seja Bem Vindo ao Canal de Renegociação.",
         createdAt: new Date(),
         updatedAt: new Date(),
-        storeId: 2,
+        storeId: 1,
+    },
+    {
+        name: "Jurídico",
+        color: "#00CC00",
+        greetingMessage: "Seja Bem Vindo ao Canal de Jurídico.",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        storeId: 1,
+    },
+    {
+        name: "Outros",
+        color: "#00FFF0",
+        greetingMessage: "Seja Bem vindo ao Canal Solicitações Diversas.",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        storeId: 1,
     },
 ];
 
