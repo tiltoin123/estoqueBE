@@ -140,7 +140,7 @@ export const update = async (
   await CheckIsValidContact(contactData.number);
 
   const { contactId } = req.params;
-
+  console.log("linha 143 contact controller", contactId, typeof (contactId))
   const contact = await UpdateContactService({ contactData, contactId });
 
   const io = getIO();

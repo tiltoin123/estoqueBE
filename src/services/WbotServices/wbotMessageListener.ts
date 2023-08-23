@@ -28,6 +28,7 @@ import { Request } from "express";
 import GetWhatsAppByPhoneNumber from "../WhatsappService/GetWhatsAppByPhoneNumber";
 import GetLastMessageSent from "../MessageServices/GetLastMessageSent";
 import Template from "../../models/Template";
+import UpdateContactService from "../ContactServices/UpdateContactService";
 
 interface Session extends Client {
   id?: number;
@@ -35,7 +36,7 @@ interface Session extends Client {
 
 const writeFileAsync = promisify(writeFile);
 
-const verifyContact = async (msgContact: WbotContact, storeId: number): Promise<Contact> => {
+const verifyContact = async (msgContact: WbotContact, storeId: number, msg?: WbotMessage): Promise<Contact> => {
   const profilePicUrl = await msgContact.getProfilePicUrl();
 
   const contactData = {
@@ -43,11 +44,16 @@ const verifyContact = async (msgContact: WbotContact, storeId: number): Promise<
     storeId: storeId,
     number: msgContact.id.user,
     profilePicUrl,
-    isGroup: msgContact.isGroup
+    isGroup: msgContact.isGroup,
+    extraInfo: msg ? [
+      {
+        name: "nome completo",
+        value: msg.body
+      }
+    ] : undefined
   };
 
-  const contact = CreateOrUpdateContactService(contactData);
-
+  const contact = await CreateOrUpdateContactService(contactData);
   return contact;
 };
 const verifyQuotedMessage = async (
@@ -260,6 +266,20 @@ const handleInvalidOption = async (
     await verifyMessageSent(optionEnforcer, ticket, contact, 1, storeId);
   }
 };
+const verifyContactFullName = async (msg: WbotMessage, contact: Contact): Promise<Contact | undefined> => {
+  const contactData = {
+    extraInfo: [
+      {
+        name: "nome completo",
+        value: msg.body
+      }
+    ]
+  };
+  const contactId = contact.id.toString()
+  const contactWFullName = await UpdateContactService({ contactData, contactId });
+
+  return contactWFullName;
+};
 
 const handleMessage = async (
   msg: WbotMessage,
@@ -307,8 +327,8 @@ const handleMessage = async (
     }
     const whatsapp = await ShowWhatsAppService(wbot.id!);
     const unreadMessages = msg.fromMe ? 0 : chat.unreadCount;
-
     let contact = await verifyContact(msgContact, storeId);
+
     if (
       unreadMessages === 0 &&
       whatsapp.farewellMessage &&
@@ -329,6 +349,13 @@ const handleMessage = async (
         await verifyMediaMessage(msg, ticket, storeId);
       }
       await verifyMessage(msg, ticket, contact, storeId)
+      const lastSentMessage = await GetLastMessageSent(contact)
+      console.log("lastsentmessage", lastSentMessage?.templateId)
+      if (lastSentMessage?.templateId === 1 && msg.type === "chat") {
+        console.log("entrou no if")
+        console.log("msgbody", msg.body)
+        await verifyContactFullName(msg, contact)
+      }
       if (msg.type === "chat" && !chat.isGroup && !msg.hasMedia) {
         let messageToSend = await templateSelector(contact)
         await handleInvalidOption(wbot, contact, messageToSend, ticket, storeId)
