@@ -12,7 +12,7 @@ module.exports = {
                 },
                 {
                     id: 2,
-                    message: "Seu nome foi atualizado no nosso banco de dados.",
+                    message: "Seu nome foi atualizado no nosso banco de dados. Para continuar o atendimento envie mais uma mensagem.",
                     lastMessage: 1,
                     storeId: 1
                 },

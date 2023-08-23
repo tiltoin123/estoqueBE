@@ -23,14 +23,12 @@ const templateSelector = async (contact: Contact) => {
                 }
                 if (conditionWord) {
                     let countControls = await CountTemplateControlsService(lastSentTemplate.id)
-                    const regex = /^[12345679]+$/;
-                    const stringToTest = "12345679";
-                    const isMatch = regex.test(stringToTest);
+                    const match = /^\d+$/.test(words) ? parseInt(words) : false;
                     const wordValue = parseInt(words)
                     if (conditionWord === words) {
                         return await templateAssembler(testTemplate);
                     }
-                    if (isMatch === false || wordValue > countControls) {
+                    if (!match || countControls < match) {
                         return await templateAssembler(lastSentTemplate)
                     }
                 }

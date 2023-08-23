@@ -350,10 +350,7 @@ const handleMessage = async (
       }
       await verifyMessage(msg, ticket, contact, storeId)
       const lastSentMessage = await GetLastMessageSent(contact)
-      console.log("lastsentmessage", lastSentMessage?.templateId)
       if (lastSentMessage?.templateId === 1 && msg.type === "chat") {
-        console.log("entrou no if")
-        console.log("msgbody", msg.body)
         await verifyContactFullName(msg, contact)
       }
       if (msg.type === "chat" && !chat.isGroup && !msg.hasMedia) {
