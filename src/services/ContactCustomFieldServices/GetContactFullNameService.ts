@@ -4,7 +4,9 @@ import GetContactCustomFieldByNameAndContactIdService from "./GetContactCustomFi
 
 
 const GetContactFullNameService = async (contactId: number): Promise<ContactCustomField> => {
-    return GetContactCustomFieldByNameAndContactIdService("full name", contactId);
+
+    const contactFullName = await GetContactCustomFieldByNameAndContactIdService("full name", contactId);
+    return contactFullName
 };
 
 export default GetContactFullNameService;
