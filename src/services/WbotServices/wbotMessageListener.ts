@@ -19,7 +19,6 @@ import { logger } from "../../utils/logger";
 import CreateOrUpdateContactService from "../ContactServices/CreateOrUpdateContactService";
 import FindOrCreateTicketService from "../TicketServices/FindOrCreateTicketService";
 import ShowWhatsAppService from "../WhatsappService/ShowWhatsAppService";
-import { debounce } from "../../helpers/Debounce";
 import UpdateTicketService from "../TicketServices/UpdateTicketService";
 import CreateContactService from "../ContactServices/CreateContactService";
 import formatBody from "../../helpers/Mustache";
@@ -353,15 +352,18 @@ const handleMessage = async (
       if (lastSentMessage?.templateId === 1 && msg.type === "chat") {
         await verifyContactFullName(msg, contact)
       }
-      if (msg.type === "chat" && !chat.isGroup && !msg.hasMedia) {
-        let messageToSend = await templateSelector(contact)
-        await handleInvalidOption(wbot, contact, messageToSend, ticket, storeId)
-        const sentMessage = await wbot.sendMessage(
-          `${contact.number}@c.us`,
-          messageToSend.message
-        );
-        await verifyMessageSent(sentMessage, ticket, contact, messageToSend.id, storeId);
-        await verifyQueue(wbot, ticket, messageToSend.queueId)
+
+      if (ticket.queueId === null) {
+        if (msg.type === "chat" && !chat.isGroup && !msg.hasMedia) {
+          let messageToSend = await templateSelector(contact)
+          await handleInvalidOption(wbot, contact, messageToSend, ticket, storeId)
+          const sentMessage = await wbot.sendMessage(
+            `${contact.number}@c.us`,
+            messageToSend.message
+          );
+          await verifyMessageSent(sentMessage, ticket, contact, messageToSend.id, storeId);
+          await verifyQueue(wbot, ticket, messageToSend.queueId)
+        }
       }
     }
 
