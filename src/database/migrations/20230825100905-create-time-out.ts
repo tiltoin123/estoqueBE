@@ -2,7 +2,7 @@ import { QueryInterface, DataTypes } from "sequelize";
 
 module.exports = {
     up: (queryInterface: QueryInterface) => {
-        return queryInterface.createTable("TimeOutConfig", {
+        return queryInterface.createTable("TimeOut", {
             id: {
                 type: DataTypes.INTEGER,
                 autoIncrement: true,
@@ -11,14 +11,14 @@ module.exports = {
             },
             contactId: {
                 type: DataTypes.INTEGER,
-                references: { model: "Contact", key: "id" },
+                references: { model: "Contacts", key: "id" },
                 onUpdate: "CASCADE",
                 onDelete: "CASCADE",
                 allowNull: false
             },
             storeId: {
                 type: DataTypes.INTEGER,
-                references: { model: "Store", key: "id" },
+                references: { model: "Stores", key: "id" },
                 onUpdate: "CASCADE",
                 onDelete: "CASCADE",
                 allowNull: false
@@ -35,6 +35,6 @@ module.exports = {
     },
 
     down: (queryInterface: QueryInterface) => {
-        return queryInterface.dropTable("TimeOutConfig");
+        return queryInterface.dropTable("TimeOut");
     }
 };

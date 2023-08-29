@@ -28,6 +28,7 @@ import GetWhatsAppByPhoneNumber from "../WhatsappService/GetWhatsAppByPhoneNumbe
 import GetLastMessageSent from "../MessageServices/GetLastMessageSent";
 import Template from "../../models/Template";
 import UpdateContactService from "../ContactServices/UpdateContactService";
+import HandleTimeOut from "../../helpers/HandleTimeOut";
 
 interface Session extends Client {
   id?: number;
@@ -352,9 +353,9 @@ const handleMessage = async (
       if (lastSentMessage?.templateId === 1 && msg.type === "chat") {
         await verifyContactFullName(msg, contact)
       }
-
-      if (ticket.queueId === null) {
-        if (msg.type === "chat" && !chat.isGroup && !msg.hasMedia) {
+      const handleTimeOut = await HandleTimeOut(contact, ticket)
+      if (msg.type === "chat" && !chat.isGroup && !msg.hasMedia) {
+        if (!handleTimeOut) {
           let messageToSend = await templateSelector(contact)
           await handleInvalidOption(wbot, contact, messageToSend, ticket, storeId)
           const sentMessage = await wbot.sendMessage(
@@ -363,8 +364,12 @@ const handleMessage = async (
           );
           await verifyMessageSent(sentMessage, ticket, contact, messageToSend.id, storeId);
           await verifyQueue(wbot, ticket, messageToSend.queueId)
+        } else {
+          const noticeSent = await wbot.sendMessage(`${contact.number}@c.us`, handleTimeOut!.toString());
+          await verifyMessageSent(noticeSent, ticket, contact, null, storeId)
         }
       }
+
     }
 
     if (msg.fromMe && ticket.status === "open") {

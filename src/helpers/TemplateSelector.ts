@@ -8,6 +8,7 @@ import CountTemplateControlsService from "../services/TemplateControlsServices/C
 import GetContactCustomFieldByNameAndContactIdService from "../services/ContactCustomFieldServices/GetContactCustomFieldByNameAndContactIdService"
 
 const templateSelector = async (contact: Contact) => {
+
     let lastReceivedMessage = await GetLastMessageReceived(contact)
     let templates = await ListTemplatesService(contact.storeId)
     let lastSentMessage = await GetLastMessageSent(contact)
@@ -40,6 +41,7 @@ const templateSelector = async (contact: Contact) => {
         return await templateAssembler(templates[0]);
     }
     return await templateAssembler(templates[2]);
+
 }
 
 export default templateSelector;

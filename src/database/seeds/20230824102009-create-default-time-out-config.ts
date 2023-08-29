@@ -9,6 +9,7 @@ module.exports = {
                     storeId: 1,
                     status: true,
                     minutesDuration: 2,
+                    notice: "Por favor, espere sua solicitação anterior seja atendida antes de fazer uma nova.",
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
