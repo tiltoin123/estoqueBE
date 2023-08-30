@@ -12,7 +12,9 @@ import {
 } from "sequelize-typescript";
 import Store from "./Stores";
 
-@Table
+@Table({
+    tableName: "TimeOutConfig",
+})
 class TimeOutConfig extends Model<TimeOutConfig> {
     @PrimaryKey
     @AutoIncrement
