@@ -29,6 +29,9 @@ import GetLastMessageSent from "../MessageServices/GetLastMessageSent";
 import Template from "../../models/Template";
 import UpdateContactService from "../ContactServices/UpdateContactService";
 import HandleTimeOut from "../../helpers/HandleTimeOut";
+import CreateOrUpdateTimeOutService from "../TimeOutServices/CreateOrUpdateTimeOutService";
+import GetTimeOutConfigService from "../TimeOutServices/GetTimeOutConfigService";
+import moment from "moment";
 
 interface Session extends Client {
   id?: number;
@@ -333,8 +336,12 @@ const handleMessage = async (
       unreadMessages === 0 &&
       whatsapp.farewellMessage &&
       formatBody(whatsapp.farewellMessage, contact) === msg.body
-    )
+    ){
       return;
+    }
+    
+    let handleTimeOut = await HandleTimeOut(contact)
+    const timeOutConfig = await GetTimeOutConfigService(storeId);
 
     const ticket = await FindOrCreateTicketService(
       contact,
@@ -353,9 +360,15 @@ const handleMessage = async (
       if (lastSentMessage?.templateId === 1 && msg.type === "chat") {
         await verifyContactFullName(msg, contact)
       }
-      const handleTimeOut = await HandleTimeOut(contact, ticket)
+      
+      if (timeOutConfig && timeOutConfig.status && !handleTimeOut && ticket.status === "pending" && ticket.queueId !== null) {
+        handleTimeOut = await CreateOrUpdateTimeOutService(ticket.storeId, ticket.contactId)
+      }
+
       if (msg.type === "chat" && !chat.isGroup && !msg.hasMedia) {
-        if (!handleTimeOut) {
+        let finishTimeout = moment(handleTimeOut?.createdAt).add(timeOutConfig.minutesDuration, 'm').toDate();
+        if (finishTimeout > new Date()) {
+          
           let messageToSend = await templateSelector(contact)
           await handleInvalidOption(wbot, contact, messageToSend, ticket, storeId)
           const sentMessage = await wbot.sendMessage(
