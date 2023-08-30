@@ -3,10 +3,14 @@ import TimeOut from "../../models/TimeOut";
 
 
 const DeleteTimeOutService = async (
-    id: number
+    storeId: number,
+    contactId: number
 ) => {
-    const timeOut = await TimeOut.findOne({
-        where: { id }
+    const timeOut = await TimeOut.findAll({
+        where: {  
+            contactId: contactId,
+            storeId: storeId
+        }
     }
     )
 
@@ -14,7 +18,10 @@ const DeleteTimeOutService = async (
         throw new AppError("ERR_NO_TICKET_FOUND", 404);
     }
 
-    await timeOut.destroy()
+    for (const item of timeOut) {
+        await item.destroy();
+    }
+    
 
     return timeOut
 }

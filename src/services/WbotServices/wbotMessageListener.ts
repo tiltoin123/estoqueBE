@@ -32,6 +32,7 @@ import HandleTimeOut from "../../helpers/HandleTimeOut";
 import CreateOrUpdateTimeOutService from "../TimeOutServices/CreateOrUpdateTimeOutService";
 import GetTimeOutConfigService from "../TimeOutServices/GetTimeOutConfigService";
 import moment from "moment";
+import DeleteTimeOutService from "../TimeOutServices/DeleteTimeOutService";
 
 interface Session extends Client {
   id?: number;
@@ -215,7 +216,8 @@ const prepareLocation = (msg: WbotMessage): WbotMessage => {
 const verifyQueue = async (
   wbot: Session,
   ticket: Ticket,
-  queueId: null | number
+  queueId: null | number,
+  contact: Contact
 ) => {
   const { queues, greetingMessage } = await ShowWhatsAppService(wbot.id!);
 
@@ -233,6 +235,9 @@ const verifyQueue = async (
       ticketData: { queueId: queueId },
       ticketId: ticket.id
     });
+
+    await DeleteTimeOutService(contact.storeId, contact.id)
+    await CreateOrUpdateTimeOutService(contact.storeId, contact.id);
   }
 };
 
@@ -367,19 +372,22 @@ const handleMessage = async (
 
       if (msg.type === "chat" && !chat.isGroup && !msg.hasMedia) {
         let finishTimeout = moment(handleTimeOut?.createdAt).add(timeOutConfig.minutesDuration, 'm').toDate();
-        if (finishTimeout > new Date()) {
-          
-          let messageToSend = await templateSelector(contact)
-          await handleInvalidOption(wbot, contact, messageToSend, ticket, storeId)
-          const sentMessage = await wbot.sendMessage(
-            `${contact.number}@c.us`,
-            messageToSend.message
-          );
-          await verifyMessageSent(sentMessage, ticket, contact, messageToSend.id, storeId);
-          await verifyQueue(wbot, ticket, messageToSend.queueId)
+        if (finishTimeout < new Date()) {
+         
+            let messageToSend = await templateSelector(contact)
+            await handleInvalidOption(wbot, contact, messageToSend, ticket, storeId)
+            const sentMessage = await wbot.sendMessage(
+              `${contact.number}@c.us`,
+              messageToSend.message
+            );
+            await verifyMessageSent(sentMessage, ticket, contact, messageToSend.id, storeId);
+            await verifyQueue(wbot, ticket, messageToSend.queueId, contact)
+
         } else {
-          const noticeSent = await wbot.sendMessage(`${contact.number}@c.us`, handleTimeOut!.toString());
-          await verifyMessageSent(noticeSent, ticket, contact, null, storeId)
+          if(lastSentMessage?.body != timeOutConfig!.notice.toString()){
+            const noticeSent = await wbot.sendMessage(`${contact.number}@c.us`, timeOutConfig!.notice.toString());
+            await verifyMessageSent(noticeSent, ticket, contact, null, storeId)
+          }
         }
       }
 
@@ -402,7 +410,7 @@ const handleMessage = async (
       !ticket.userId &&
       whatsapp.queues.length >= 1
     ) {
-      await verifyQueue(wbot, ticket, null);
+      await verifyQueue(wbot, ticket, null,contact);
     }
 
     if (msg.type === "vcard") {
