@@ -3,7 +3,7 @@ import { QueryInterface } from "sequelize";
 module.exports = {
     up: (queryInterface: QueryInterface) => {
         return queryInterface.bulkInsert(
-            "templateControls", [
+            "TemplateControls", [
             {
                 id: 1, valor: "Comprar Imóvel", choice: "1", templateId: 3, createdAt: new Date(),
                 updatedAt: new Date()

@@ -12,9 +12,7 @@ import {
 import Contact from "./Contact";
 import Store from "./Stores";
 
-@Table({
-    tableName: "timeout",
-})
+@Table
 class TimeOut extends Model<TimeOut> {
     @PrimaryKey
     @Column({ type: DataType.INTEGER })
