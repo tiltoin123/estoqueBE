@@ -8,11 +8,12 @@ import CountTemplateControlsService from "../services/TemplateControlsServices/C
 import GetContactCustomFieldByNameAndContactIdService from "../services/ContactCustomFieldServices/GetContactCustomFieldByNameAndContactIdService"
 
 const templateSelector = async (contact: Contact) => {
+
     let lastReceivedMessage = await GetLastMessageReceived(contact)
     let templates = await ListTemplatesService(contact.storeId)
     let lastSentMessage = await GetLastMessageSent(contact)
     let lastSentTemplate = await ShowTemplatesService(lastSentMessage ? lastSentMessage.templateId : 1)
-    let contactFname = await GetContactCustomFieldByNameAndContactIdService("nome completo", contact.id)
+    let contactFullName = await GetContactCustomFieldByNameAndContactIdService("nome completo", contact.id)
     if (lastReceivedMessage && lastSentMessage) {
         for (let i = 0; i < templates.length; i++) {
             let testTemplate = templates[i];
@@ -26,7 +27,6 @@ const templateSelector = async (contact: Contact) => {
                 if (conditionWord) {
                     let countControls = await CountTemplateControlsService(lastSentTemplate.id)
                     const match = /^\d+$/.test(words) ? parseInt(words) : false;
-                    const wordValue = parseInt(words)
                     if (conditionWord === words) {
                         return await templateAssembler(testTemplate);
                     }
@@ -37,10 +37,11 @@ const templateSelector = async (contact: Contact) => {
             }
         }
     }
-    if (contactFname && contactFname.name !== "nome completo") {
+    if (!contactFullName) {
         return await templateAssembler(templates[0]);
     }
     return await templateAssembler(templates[2]);
+
 }
 
 export default templateSelector;

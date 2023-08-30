@@ -9,6 +9,7 @@ import UpdateTicketService from "../services/TicketServices/UpdateTicketService"
 import SendWhatsAppMessage from "../services/WbotServices/SendWhatsAppMessage";
 import ShowWhatsAppService from "../services/WhatsappService/ShowWhatsAppService";
 import formatBody from "../helpers/Mustache";
+import NullifyQueueIdFromTicket from "../services/TicketServices/NullifyQueueIdFromTicket";
 
 type IndexQuery = {
   searchParam: string;
@@ -96,16 +97,18 @@ export const update = async (
   });
 
   if (ticket.status === "closed") {
-    const whatsapp = await ShowWhatsAppService(ticket.whatsappId);
+    /* const whatsapp = await ShowWhatsAppService(ticket.whatsappId); */
 
-    const { farewellMessage } = whatsapp;
-
-    if (farewellMessage) {
+    /*     const { farewellMessage } = whatsapp; */
+    if (ticket.queueId !== null) {
+      await NullifyQueueIdFromTicket(ticket.id)
+    }
+    /* if (farewellMessage) {
       await SendWhatsAppMessage({
         body: formatBody(farewellMessage, ticket.contact),
         ticket
       });
-    }
+    } */
   }
   return res.status(200).json(ticket);
 };
