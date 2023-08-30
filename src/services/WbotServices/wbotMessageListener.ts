@@ -361,7 +361,7 @@ const handleMessage = async (
         await verifyContactFullName(msg, contact)
       }
       
-      if (timeOutConfig && timeOutConfig.status && !handleTimeOut && ticket.status === "pending" && ticket.queueId !== null) {
+      if (timeOutConfig && timeOutConfig.status && !handleTimeOut && ticket.queueId !== null) {
         handleTimeOut = await CreateOrUpdateTimeOutService(ticket.storeId, ticket.contactId)
       }
 
