@@ -309,9 +309,7 @@ const handleMessage = async (
 
       if (/\u200e/.test(msg.body[0])) return;
 
-      if (!msg.hasMedia && msg.type !== "location" && msg.type !== "chat" && msg.type !== "vcard"
-
-      ) return;
+      if (!msg.hasMedia && msg.type !== "location" && msg.type !== "chat" && msg.type !== "vcard") return;
 
       msgContact = await wbot.getContactById(msg.to);
 
@@ -333,6 +331,7 @@ const handleMessage = async (
 
       groupContact = await verifyContact(msgGroupContact, storeId);
     }
+
     const whatsapp = await ShowWhatsAppService(wbot.id!);
     const unreadMessages = msg.fromMe ? 0 : chat.unreadCount;
     let contact = await verifyContact(msgContact, storeId);
@@ -357,11 +356,14 @@ const handleMessage = async (
     );
 
     if (!msg.fromMe && ticket.status === "pending") {
+
       if (msg.hasMedia) {
         await verifyMediaMessage(msg, ticket, storeId);
       }
       await verifyMessage(msg, ticket, contact, storeId)
+      
       const lastSentMessage = await GetLastMessageSent(contact)
+      
       if (lastSentMessage?.templateId === 1 && msg.type === "chat") {
         await verifyContactFullName(msg, contact)
       }
@@ -370,11 +372,18 @@ const handleMessage = async (
         handleTimeOut = await CreateOrUpdateTimeOutService(ticket.storeId, ticket.contactId)
       }
 
+      console.log(handleTimeOut);
+
       if (msg.type === "chat" && !chat.isGroup && !msg.hasMedia) {
+
         let finishTimeout = moment(handleTimeOut?.createdAt).add(timeOutConfig.minutesDuration, 'm').toDate();
-        if (finishTimeout < new Date()) {
+
+        if (!handleTimeOut || finishTimeout < new Date()) {
          
             let messageToSend = await templateSelector(contact)
+
+          
+
             await handleInvalidOption(wbot, contact, messageToSend, ticket, storeId)
             const sentMessage = await wbot.sendMessage(
               `${contact.number}@c.us`,

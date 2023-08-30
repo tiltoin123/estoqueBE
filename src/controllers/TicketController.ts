@@ -10,6 +10,7 @@ import SendWhatsAppMessage from "../services/WbotServices/SendWhatsAppMessage";
 import ShowWhatsAppService from "../services/WhatsappService/ShowWhatsAppService";
 import formatBody from "../helpers/Mustache";
 import NullifyQueueIdFromTicket from "../services/TicketServices/NullifyQueueIdFromTicket";
+import DeleteTimeOutService from "../services/TimeOutServices/DeleteTimeOutService";
 
 type IndexQuery = {
   searchParam: string;
@@ -97,19 +98,20 @@ export const update = async (
   });
 
   if (ticket.status === "closed") {
-    /* const whatsapp = await ShowWhatsAppService(ticket.whatsappId); */
 
-    /*     const { farewellMessage } = whatsapp; */
-    if (ticket.queueId !== null) {
+    const ticketDataBase = await ShowTicketService(ticket.id)
+
+    if(ticketDataBase && ticketDataBase.id){
       await NullifyQueueIdFromTicket(ticket.id)
+
+      console.log('req.user.storeId', req.user.storeId)
+      console.log('ticketData.contactId', ticketData.contactId)
+  
+      await DeleteTimeOutService(req.user.storeId, ticketDataBase.contactId)
     }
-    /* if (farewellMessage) {
-      await SendWhatsAppMessage({
-        body: formatBody(farewellMessage, ticket.contact),
-        ticket
-      });
-    } */
+    
   }
+
   return res.status(200).json(ticket);
 };
 
