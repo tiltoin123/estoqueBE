@@ -1,5 +1,5 @@
 
-import TemplateControls from "../../models/TemplateControls"; // Adjust the path as needed
+import TemplateControls from "../../models/TemplateControls";
 
 const ListTemplateControlsService = async (templateId: number): Promise<TemplateControls[]> => {
     try {
@@ -11,7 +11,6 @@ const ListTemplateControlsService = async (templateId: number): Promise<Template
 
         return templateItems;
     } catch (error) {
-        // Handle the error as needed
         throw error;
     }
 };

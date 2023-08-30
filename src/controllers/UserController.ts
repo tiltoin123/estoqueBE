@@ -62,7 +62,6 @@ export const show = async (req: Request, res: Response): Promise<Response> => {
   const { userId } = req.params;
 
   const user = await ShowUserService(userId);
-  console.log("linha 62 UserController user storeId:", user.storeId)
   return res.status(200).json(user);
 };
 

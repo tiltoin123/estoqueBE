@@ -38,16 +38,15 @@ const UpdateContactService = async ({
   if (extraInfo) {
     await Promise.all(
       extraInfo.map(async info => {
-        await ContactCustomField.upsert({ ...info, contactId: contact.id });
-      })
-    );
+        const existingInfo = contact.extraInfo.find(
+          oldInfo => oldInfo.name === info.name && oldInfo.contactId === contact.id
+        );
 
-    await Promise.all(
-      contact.extraInfo.map(async oldInfo => {
-        const stillExists = extraInfo.findIndex(info => info.id === oldInfo.id);
-
-        if (stillExists === -1) {
-          await ContactCustomField.destroy({ where: { id: oldInfo.id } });
+        if (existingInfo) {
+          existingInfo.value = info.value;
+          await existingInfo.save();
+        } else {
+          await ContactCustomField.create({ ...info, contactId: contact.id });
         }
       })
     );

@@ -13,6 +13,8 @@ import QuickAnswer from "../models/QuickAnswer";
 import Template from "../models/Template";
 import Store from "../models/Stores";
 import TemplateControls from "../models/TemplateControls";
+import TimeOutConfig from "../models/TimeOutConfig";
+import TimeOut from "../models/TimeOut";
 
 // eslint-disable-next-line
 const dbConfig = require("../config/database");
@@ -34,7 +36,9 @@ const models = [
   QuickAnswer,
   Template,
   Store,
-  TemplateControls
+  TemplateControls,
+  TimeOutConfig,
+  TimeOut
 ];
 
 sequelize.addModels(models);

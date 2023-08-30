@@ -4,7 +4,7 @@ module.exports = {
     up: async (queryInterface: QueryInterface) => {
         await queryInterface.addColumn("Messages", "templateId", {
             type: DataTypes.INTEGER,
-            allowNull: false,
+            allowNull: true,
             references: { model: "Template", key: "id" },
             onUpdate: "CASCADE",
             onDelete: "NO ACTION"

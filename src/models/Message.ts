@@ -83,9 +83,8 @@ class Message extends Model<Message> {
   contact: Contact;
 
   @ForeignKey(() => Template)
-  @Default(1)
   @Column({
-    allowNull: false,
+    allowNull: true,
   })
   templateId: number
 

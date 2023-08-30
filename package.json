@@ -40,7 +40,7 @@
     "sequelize-typescript": "^1.1.0",
     "socket.io": "^3.0.5",
     "uuid": "^8.3.2",
-    "whatsapp-web.js": "github:pedroslopez/whatsapp-web.js#9a6466edbc4af5b5eeea060917c15f86b283f510",
+    "whatsapp-web.js": "https://github.com/Julzk/whatsapp-web.js/tarball/jkr_hotfix_7",
     "yup": "^0.32.8"
   },
   "devDependencies": {
