@@ -5,12 +5,15 @@ import ListTemplatesService from "../services/TemplateServices/ListTemplatesServ
 import ShowTemplatesService from "../services/TemplateServices/ShowTemplatesService"
 import templateAssembler from "./TemplateAssembler";
 import CountTemplateControlsService from "../services/TemplateControlsServices/CountTemplateControlsService"
+import GetContactCustomFieldByNameAndContactIdService from "../services/ContactCustomFieldServices/GetContactCustomFieldByNameAndContactIdService"
 
 const templateSelector = async (contact: Contact) => {
+
     let lastReceivedMessage = await GetLastMessageReceived(contact)
     let templates = await ListTemplatesService(contact.storeId)
     let lastSentMessage = await GetLastMessageSent(contact)
     let lastSentTemplate = await ShowTemplatesService(lastSentMessage ? lastSentMessage.templateId : 1)
+    let contactFullName = await GetContactCustomFieldByNameAndContactIdService("nome completo", contact.id)
     if (lastReceivedMessage && lastSentMessage) {
         for (let i = 0; i < templates.length; i++) {
             let testTemplate = templates[i];
@@ -22,18 +25,22 @@ const templateSelector = async (contact: Contact) => {
                     return await templateAssembler(testTemplate);
                 }
                 if (conditionWord) {
-                    let countControls = await (await CountTemplateControlsService(testTemplate.id)).toString()
+                    let countControls = await CountTemplateControlsService(lastSentTemplate.id)
+                    const match = /^\d+$/.test(words) ? parseInt(words) : false;
                     if (conditionWord === words) {
                         return await templateAssembler(testTemplate);
                     }
-                    if (conditionWord !== words && words === countControls) {
+                    if (!match || countControls < match) {
                         return await templateAssembler(lastSentTemplate)
                     }
                 }
             }
         }
     }
-    return await templateAssembler(templates[0]);
+    if (!contactFullName) {
+        return await templateAssembler(templates[0]);
+    }
+    return await templateAssembler(templates[2]);
 
 }
 

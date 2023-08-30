@@ -19,7 +19,6 @@ import { logger } from "../../utils/logger";
 import CreateOrUpdateContactService from "../ContactServices/CreateOrUpdateContactService";
 import FindOrCreateTicketService from "../TicketServices/FindOrCreateTicketService";
 import ShowWhatsAppService from "../WhatsappService/ShowWhatsAppService";
-import { debounce } from "../../helpers/Debounce";
 import UpdateTicketService from "../TicketServices/UpdateTicketService";
 import CreateContactService from "../ContactServices/CreateContactService";
 import formatBody from "../../helpers/Mustache";
@@ -28,6 +27,8 @@ import { Request } from "express";
 import GetWhatsAppByPhoneNumber from "../WhatsappService/GetWhatsAppByPhoneNumber";
 import GetLastMessageSent from "../MessageServices/GetLastMessageSent";
 import Template from "../../models/Template";
+import UpdateContactService from "../ContactServices/UpdateContactService";
+import HandleTimeOut from "../../helpers/HandleTimeOut";
 
 interface Session extends Client {
   id?: number;
@@ -35,7 +36,7 @@ interface Session extends Client {
 
 const writeFileAsync = promisify(writeFile);
 
-const verifyContact = async (msgContact: WbotContact, storeId: number): Promise<Contact> => {
+const verifyContact = async (msgContact: WbotContact, storeId: number, msg?: WbotMessage): Promise<Contact> => {
   const profilePicUrl = await msgContact.getProfilePicUrl();
 
   const contactData = {
@@ -43,11 +44,16 @@ const verifyContact = async (msgContact: WbotContact, storeId: number): Promise<
     storeId: storeId,
     number: msgContact.id.user,
     profilePicUrl,
-    isGroup: msgContact.isGroup
+    isGroup: msgContact.isGroup,
+    extraInfo: msg ? [
+      {
+        name: "nome completo",
+        value: msg.body
+      }
+    ] : undefined
   };
 
-  const contact = CreateOrUpdateContactService(contactData);
-
+  const contact = await CreateOrUpdateContactService(contactData);
   return contact;
 };
 const verifyQuotedMessage = async (
@@ -148,7 +154,7 @@ const verifyMessage = async (
     storeId: storeId,
     ticketId: ticket.id,
     contactId: msg.fromMe ? undefined : contact.id,
-    templateId: 1,
+    templateId: null,
     from: msg.from.replace(/[^0-9]/g, ""),
     to: msg.to.replace(/[^0-9]/g, ""),
     body: msg.body,
@@ -167,7 +173,7 @@ const verifyMessageSent = async (
   msg: WbotMessage,
   ticket: Ticket,
   contact: Contact,
-  templateId: number,
+  templateId: number | null,
   storeId: number
 ) => {
   if (msg.type === 'location')
@@ -178,7 +184,7 @@ const verifyMessageSent = async (
     storeId: storeId,
     ticketId: ticket.id,
     contactId: msg.fromMe ? undefined : contact.id,
-    templateId: templateId ? templateId : 1,
+    templateId: templateId ? templateId : null,
     from: msg.from.replace(/[^0-9]/g, ""),
     to: msg.to.replace(/[^0-9]/g, ""),
     body: msg.body,
@@ -260,6 +266,20 @@ const handleInvalidOption = async (
     await verifyMessageSent(optionEnforcer, ticket, contact, 1, storeId);
   }
 };
+const verifyContactFullName = async (msg: WbotMessage, contact: Contact): Promise<Contact | undefined> => {
+  const contactData = {
+    extraInfo: [
+      {
+        name: "nome completo",
+        value: msg.body
+      }
+    ]
+  };
+  const contactId = contact.id.toString()
+  const contactWFullName = await UpdateContactService({ contactData, contactId });
+
+  return contactWFullName;
+};
 
 const handleMessage = async (
   msg: WbotMessage,
@@ -307,8 +327,8 @@ const handleMessage = async (
     }
     const whatsapp = await ShowWhatsAppService(wbot.id!);
     const unreadMessages = msg.fromMe ? 0 : chat.unreadCount;
-
     let contact = await verifyContact(msgContact, storeId);
+
     if (
       unreadMessages === 0 &&
       whatsapp.farewellMessage &&
@@ -329,16 +349,27 @@ const handleMessage = async (
         await verifyMediaMessage(msg, ticket, storeId);
       }
       await verifyMessage(msg, ticket, contact, storeId)
-      if (msg.type === "chat" && !chat.isGroup && !msg.hasMedia) {
-        let messageToSend = await templateSelector(contact)
-        await handleInvalidOption(wbot, contact, messageToSend, ticket, storeId)
-        const sentMessage = await wbot.sendMessage(
-          `${contact.number}@c.us`,
-          messageToSend.message
-        );
-        await verifyMessageSent(sentMessage, ticket, contact, messageToSend.id, storeId);
-        await verifyQueue(wbot, ticket, messageToSend.queueId)
+      const lastSentMessage = await GetLastMessageSent(contact)
+      if (lastSentMessage?.templateId === 1 && msg.type === "chat") {
+        await verifyContactFullName(msg, contact)
       }
+      const handleTimeOut = await HandleTimeOut(contact, ticket)
+      if (msg.type === "chat" && !chat.isGroup && !msg.hasMedia) {
+        if (!handleTimeOut) {
+          let messageToSend = await templateSelector(contact)
+          await handleInvalidOption(wbot, contact, messageToSend, ticket, storeId)
+          const sentMessage = await wbot.sendMessage(
+            `${contact.number}@c.us`,
+            messageToSend.message
+          );
+          await verifyMessageSent(sentMessage, ticket, contact, messageToSend.id, storeId);
+          await verifyQueue(wbot, ticket, messageToSend.queueId)
+        } else {
+          const noticeSent = await wbot.sendMessage(`${contact.number}@c.us`, handleTimeOut!.toString());
+          await verifyMessageSent(noticeSent, ticket, contact, null, storeId)
+        }
+      }
+
     }
 
     if (msg.fromMe && ticket.status === "open") {

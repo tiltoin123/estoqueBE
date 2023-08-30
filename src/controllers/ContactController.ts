@@ -140,7 +140,6 @@ export const update = async (
   await CheckIsValidContact(contactData.number);
 
   const { contactId } = req.params;
-
   const contact = await UpdateContactService({ contactData, contactId });
 
   const io = getIO();
