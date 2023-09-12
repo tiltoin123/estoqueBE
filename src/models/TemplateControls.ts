@@ -31,6 +31,9 @@ class TemplateControls extends Model<TemplateControls> {
     @UpdatedAt
     updatedAt: Date;
 
+    @Column({ type: DataType.BOOLEAN })
+    backMenu: boolean
+
     @ForeignKey(() => Template)
     @Column
     templateId: number;

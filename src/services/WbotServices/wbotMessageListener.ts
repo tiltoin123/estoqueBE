@@ -340,10 +340,10 @@ const handleMessage = async (
       unreadMessages === 0 &&
       whatsapp.farewellMessage &&
       formatBody(whatsapp.farewellMessage, contact) === msg.body
-    ){
+    ) {
       return;
     }
-    
+
     let handleTimeOut = await HandleTimeOut(contact)
     const timeOutConfig = await GetTimeOutConfigService(storeId);
 
@@ -361,39 +361,39 @@ const handleMessage = async (
         await verifyMediaMessage(msg, ticket, storeId);
       }
       await verifyMessage(msg, ticket, contact, storeId)
-      
+
       const lastSentMessage = await GetLastMessageSent(contact)
-      
+
       if (lastSentMessage?.templateId === 1 && msg.type === "chat") {
         await verifyContactFullName(msg, contact)
       }
-      
+
       if (timeOutConfig && timeOutConfig.status && !handleTimeOut && ticket.queueId !== null) {
         handleTimeOut = await CreateOrUpdateTimeOutService(ticket.storeId, ticket.contactId)
       }
 
-      console.log(handleTimeOut);
+      /*     console.log(handleTimeOut); */
 
       if (msg.type === "chat" && !chat.isGroup && !msg.hasMedia) {
 
         let finishTimeout = moment(handleTimeOut?.createdAt).add(timeOutConfig.minutesDuration, 'm').toDate();
 
         if (!handleTimeOut || finishTimeout < new Date()) {
-         
-            let messageToSend = await templateSelector(contact)
 
-          
+          let messageToSend = await templateSelector(contact)
 
-            await handleInvalidOption(wbot, contact, messageToSend, ticket, storeId)
-            const sentMessage = await wbot.sendMessage(
-              `${contact.number}@c.us`,
-              messageToSend.message
-            );
-            await verifyMessageSent(sentMessage, ticket, contact, messageToSend.id, storeId);
-            await verifyQueue(wbot, ticket, messageToSend.queueId, contact)
+
+
+          await handleInvalidOption(wbot, contact, messageToSend, ticket, storeId)
+          const sentMessage = await wbot.sendMessage(
+            `${contact.number}@c.us`,
+            messageToSend.message
+          );
+          await verifyMessageSent(sentMessage, ticket, contact, messageToSend.id, storeId);
+          await verifyQueue(wbot, ticket, messageToSend.queueId, contact)
 
         } else {
-          if(lastSentMessage?.body != timeOutConfig!.notice.toString()){
+          if (lastSentMessage?.body != timeOutConfig!.notice.toString()) {
             const noticeSent = await wbot.sendMessage(`${contact.number}@c.us`, timeOutConfig!.notice.toString());
             await verifyMessageSent(noticeSent, ticket, contact, null, storeId)
           }
@@ -419,7 +419,7 @@ const handleMessage = async (
       !ticket.userId &&
       whatsapp.queues.length >= 1
     ) {
-      await verifyQueue(wbot, ticket, null,contact);
+      await verifyQueue(wbot, ticket, null, contact);
     }
 
     if (msg.type === "vcard") {

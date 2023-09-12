@@ -101,15 +101,12 @@ export const update = async (
 
     const ticketDataBase = await ShowTicketService(ticket.id)
 
-    if(ticketDataBase && ticketDataBase.id){
+    if (ticketDataBase && ticketDataBase.id) {
       await NullifyQueueIdFromTicket(ticket.id)
 
-      console.log('req.user.storeId', req.user.storeId)
-      console.log('ticketData.contactId', ticketData.contactId)
-  
       await DeleteTimeOutService(req.user.storeId, ticketDataBase.contactId)
     }
-    
+
   }
 
   return res.status(200).json(ticket);

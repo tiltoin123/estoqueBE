@@ -50,8 +50,8 @@ module.exports = {
                 },
                 {
                     id: 8,
-                    message: "Agradecemos por compartilhar essas informações conosco! Já estamos dando prioridade à sua solicitação e encaminhamos para a equipe responsável. " +
-                        "Se estiver fora do horário comercial, fique tranquilo! Iremos atendê-lo o mais rápido possível ao retornarmos. Muito obrigado pela compreensão! 😊",
+                    message: "Agradecemos por compartilhar essas informações conosco! Já estamos dando prioridade à sua solicitação e encaminhamos para a equipe responsável." +
+                        " Se estiver fora do horário comercial, fique tranquilo! Iremos atendê-lo o mais rápido possível ao retornarmos. Muito obrigado pela compreensão! 😊",
                     lastMessage: 5,
                     condition: "2",
                     queueId: 1,
@@ -59,8 +59,8 @@ module.exports = {
                 },
                 {
                     id: 9,
-                    message: "Agradecemos por compartilhar essas informações conosco! Já estamos dando prioridade à sua solicitação e encaminhamos para a equipe responsável. " +
-                        "Se estiver fora do horário comercial, fique tranquilo! Iremos atendê-lo o mais rápido possível ao retornarmos. Muito obrigado pela compreensão! 😊",
+                    message: "Agradecemos por compartilhar essas informações conosco! Já estamos dando prioridade à sua solicitação e encaminhamos para a equipe responsável." +
+                        " Se estiver fora do horário comercial, fique tranquilo! Iremos atendê-lo o mais rápido possível ao retornarmos. Muito obrigado pela compreensão! 😊",
                     lastMessage: 7,
                     queueId: 1,
                     storeId: 1
@@ -75,15 +75,15 @@ module.exports = {
                 {
                     id: 11,
                     message: "Agradecemos por compartilhar essas informações conosco! Já estamos dando prioridade à sua solicitação e encaminhamos para a equipe responsável." +
-                        "Se estiver fora do horário comercial, fique tranquilo! Iremos atendê-lo o mais rápido possível ao retornarmos. Muito obrigado pela compreensão! 😊",
+                        " Se estiver fora do horário comercial, fique tranquilo! Iremos atendê-lo o mais rápido possível ao retornarmos. Muito obrigado pela compreensão! 😊",
                     lastMessage: 10,
                     queueId: 2,
                     storeId: 1
                 },
                 {
                     id: 12,
-                    message: "Agradecemos por compartilhar essas informações conosco! Já estamos dando prioridade à sua solicitação e encaminhamos para a equipe responsável. " +
-                        "Se estiver fora do horário comercial, fique tranquilo! Iremos atendê-lo o mais rápido possível ao retornarmos. Muito obrigado pela compreensão! 😊",
+                    message: "Agradecemos por compartilhar essas informações conosco! Já estamos dando prioridade à sua solicitação e encaminhamos para a equipe responsável." +
+                        " Se estiver fora do horário comercial, fique tranquilo! Iremos atendê-lo o mais rápido possível ao retornarmos. Muito obrigado pela compreensão! 😊",
                     lastMessage: 3,
                     condition: "3",
                     queueId: 3,
@@ -91,8 +91,8 @@ module.exports = {
                 },
                 {
                     id: 13,
-                    message: "Agradecemos por compartilhar essas informações conosco! Já estamos dando prioridade à sua solicitação e encaminhamos para a equipe responsável. " +
-                        "Se estiver fora do horário comercial, fique tranquilo! Iremos atendê-lo o mais rápido possível ao retornarmos. Muito obrigado pela compreensão! 😊",
+                    message: "Agradecemos por compartilhar essas informações conosco! Já estamos dando prioridade à sua solicitação e encaminhamos para a equipe responsável." +
+                        " Se estiver fora do horário comercial, fique tranquilo! Iremos atendê-lo o mais rápido possível ao retornarmos. Muito obrigado pela compreensão! 😊",
                     lastMessage: 3,
                     condition: "4",
                     queueId: 4,
@@ -100,8 +100,8 @@ module.exports = {
                 },
                 {
                     id: 14,
-                    message: "Agradecemos por compartilhar essas informações conosco! Já estamos dando prioridade à sua solicitação e encaminhamos para a equipe responsável. " +
-                        "Se estiver fora do horário comercial, fique tranquilo! Iremos atendê-lo o mais rápido possível ao retornarmos. Muito obrigado pela compreensão! 😊",
+                    message: "Agradecemos por compartilhar essas informações conosco! Já estamos dando prioridade à sua solicitação e encaminhamos para a equipe responsável." +
+                        " Se estiver fora do horário comercial, fique tranquilo! Iremos atendê-lo o mais rápido possível ao retornarmos. Muito obrigado pela compreensão! 😊",
                     lastMessage: 3,
                     condition: "5",
                     queueId: 5,
@@ -109,8 +109,8 @@ module.exports = {
                 },
                 {
                     id: 15,
-                    message: "Agradecemos por compartilhar essas informações conosco! Já estamos dando prioridade à sua solicitação e encaminhamos para a equipe responsável. " +
-                        "Se estiver fora do horário comercial, fique tranquilo! Iremos atendê-lo o mais rápido possível ao retornarmos. Muito obrigado pela compreensão! 😊",
+                    message: "Agradecemos por compartilhar essas informações conosco! Já estamos dando prioridade à sua solicitação e encaminhamos para a equipe responsável." +
+                        " Se estiver fora do horário comercial, fique tranquilo! Iremos atendê-lo o mais rápido possível ao retornarmos. Muito obrigado pela compreensão! 😊",
                     lastMessage: 3,
                     condition: "6",
                     queueId: 6,
@@ -125,8 +125,8 @@ module.exports = {
                 },
                 {
                     id: 17,
-                    message: "Agradecemos por compartilhar essas informações conosco! Já estamos dando prioridade à sua solicitação e encaminhamos para a equipe responsável. " +
-                        "Se estiver fora do horário comercial, fique tranquilo! Iremos atendê-lo o mais rápido possível ao retornarmos. Muito obrigado pela compreensão! 😊",
+                    message: "Agradecemos por compartilhar essas informações conosco! Já estamos dando prioridade à sua solicitação e encaminhamos para a equipe responsável." +
+                        " Se estiver fora do horário comercial, fique tranquilo! Iremos atendê-lo o mais rápido possível ao retornarmos. Muito obrigado pela compreensão! 😊",
                     lastMessage: 16,
                     queueId: 7,
                     storeId: 1
