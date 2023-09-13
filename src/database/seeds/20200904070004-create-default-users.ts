@@ -8,7 +8,7 @@ module.exports = {
         {
           name: "Administrador",
           email: "admin@whaticket.com",
-          passwordHash: "$2a$08$WaEmpmFDD/XkDqorkpQ42eUZozOqRCPkPcTkmHHMyuTGUOkI8dHsq",
+          passwordHash: "$2a$08$rN88MoBr/f2861MLh33/NuAHT1QVrid134MUXiF6dpi6l7ui0fKqS",
           profile: "admin",
           tokenVersion: 0,
           storeId: 1,
