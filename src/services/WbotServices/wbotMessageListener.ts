@@ -33,6 +33,8 @@ import CreateOrUpdateTimeOutService from "../TimeOutServices/CreateOrUpdateTimeO
 import GetTimeOutConfigService from "../TimeOutServices/GetTimeOutConfigService";
 import moment from "moment";
 import DeleteTimeOutService from "../TimeOutServices/DeleteTimeOutService";
+import CreateContactTagService from "../ContactTagsService/CreateContactTagService";
+import ShowQueueService from "../QueueService/ShowQueueService";
 
 interface Session extends Client {
   id?: number;
@@ -229,13 +231,14 @@ const verifyQueue = async (
 
     return;
   }
-
   if (queueId) {
     await UpdateTicketService({
       ticketData: { queueId: queueId },
       ticketId: ticket.id
     });
-
+    const queue = await ShowQueueService(queueId)
+    const queueName = queue.name
+    await CreateContactTagService(contact, queueName)
     await DeleteTimeOutService(contact.storeId, contact.id)
     await CreateOrUpdateTimeOutService(contact.storeId, contact.id);
   }
@@ -371,8 +374,6 @@ const handleMessage = async (
       if (timeOutConfig && timeOutConfig.status && !handleTimeOut && ticket.queueId !== null) {
         handleTimeOut = await CreateOrUpdateTimeOutService(ticket.storeId, ticket.contactId)
       }
-
-      /*     console.log(handleTimeOut); */
 
       if (msg.type === "chat" && !chat.isGroup && !msg.hasMedia) {
 
