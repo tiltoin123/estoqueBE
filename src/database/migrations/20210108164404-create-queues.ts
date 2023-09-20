@@ -11,13 +11,11 @@ module.exports = {
       },
       name: {
         type: DataTypes.STRING,
-        allowNull: false,
-        unique: true
+        allowNull: false
       },
       color: {
         type: DataTypes.STRING,
-        allowNull: false,
-        unique: true
+        allowNull: false
       },
       greetingMessage: {
         type: DataTypes.TEXT

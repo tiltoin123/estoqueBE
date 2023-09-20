@@ -3,12 +3,13 @@ import GetLastMessageReceived from "../services/MessageServices/GetLastMessageRe
 import GetLastMessageSent from "../services/MessageServices/GetLastMessageSent"
 import ListTemplatesService from "../services/TemplateServices/ListTemplatesService"
 import ShowTemplatesService from "../services/TemplateServices/ShowTemplatesService"
-import templateAssembler from "./TemplateAssembler";
 import CountTemplateControlsService from "../services/TemplateControlsServices/CountTemplateControlsService"
 import GetContactCustomFieldByNameAndContactIdService from "../services/ContactCustomFieldServices/GetContactCustomFieldByNameAndContactIdService"
 import ShowFirstTemplatesService from "../services/TemplateServices/ShowFirstTemplatesService"
 import GetFirstControlsSetService from "../services/TemplateControlsServices/GetFirstControlsSetService"
 import ListTemplateControlsService from "../services/TemplateControlsServices/ListTemplateControlsService"
+import templateAssembler from "./TemplateAssembler"
+
 
 const templateSelector = async (contact: Contact) => {
 
@@ -29,7 +30,7 @@ const templateSelector = async (contact: Contact) => {
     if (lastReceivedMessage && lastSentMessage) {
         let words = lastReceivedMessage.body.toString().toLowerCase();
         if (lastReceivedMessage.body.toString() === backMenu?.choice && backMenu?.backMenu) {
-            return await templateAssembler(firstMenu)
+            return await templateAssembler(firstMenu, contact)
         }
         for (let i = 0; i < templates.length; i++) {
             let testTemplate = templates[i];
@@ -38,25 +39,26 @@ const templateSelector = async (contact: Contact) => {
 
             if (testTemplate.lastMessage == lastSentTemplate.id) {
                 if (!conditionWord) {
-                    return await templateAssembler(testTemplate);
+                    return await templateAssembler(testTemplate, contact);
                 }
                 if (conditionWord) {
                     let countControls = templateControls.length
                     const match = /^\d+$/.test(words) ? parseInt(words) : false;
                     if (conditionWord === words) {
-                        return await templateAssembler(testTemplate);
+                        return await templateAssembler(testTemplate, contact);
                     }
                     if (!match || countControls < match) {
-                        return await templateAssembler(lastSentTemplate)
+                        return await templateAssembler(lastSentTemplate, contact)
                     }
                 }
             }
         }
     }
     if (!contactFullName) {
-        return await templateAssembler(firstMessageTemplate);
+        return await templateAssembler(firstMessageTemplate, contact);
     }
-    return await templateAssembler(firstMenu);
+    console.log(contactFullName)
+    return await templateAssembler(firstMenu, contact);
 
 }
 

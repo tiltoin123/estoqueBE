@@ -11,6 +11,7 @@ import ShowWhatsAppService from "../services/WhatsappService/ShowWhatsAppService
 import formatBody from "../helpers/Mustache";
 import NullifyQueueIdFromTicket from "../services/TicketServices/NullifyQueueIdFromTicket";
 import DeleteTimeOutService from "../services/TimeOutServices/DeleteTimeOutService";
+import ListContactTagsService from "../services/ContactTagsService/ListContactTagsService";
 
 type IndexQuery = {
   searchParam: string;
@@ -60,7 +61,13 @@ export const index = async (req: Request, res: Response): Promise<Response> => {
     queueIds,
     withUnreadMessages
   });
-  return res.status(200).json({ tickets, count, hasMore });
+  let contactIds: number[] = []
+  tickets.forEach(ticket => {
+    contactIds.push(ticket.contactId)
+  });
+  const tags = await ListContactTagsService(contactIds)
+  //console.log(tags)
+  return res.status(200).json({ tickets, count, hasMore, tags });
 };
 
 export const store = async (req: Request, res: Response): Promise<Response> => {

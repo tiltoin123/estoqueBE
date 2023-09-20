@@ -15,6 +15,7 @@ import Store from "../models/Stores";
 import TemplateControls from "../models/TemplateControls";
 import TimeOutConfig from "../models/TimeOutConfig";
 import TimeOut from "../models/TimeOut";
+import ContactTags from "../models/ContactTags";
 
 // eslint-disable-next-line
 const dbConfig = require("../config/database");
@@ -38,7 +39,8 @@ const models = [
   Store,
   TemplateControls,
   TimeOutConfig,
-  TimeOut
+  TimeOut,
+  ContactTags
 ];
 
 sequelize.addModels(models);

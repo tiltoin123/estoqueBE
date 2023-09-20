@@ -3,6 +3,8 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "hotfix":"https://github.com/brunox64/whatsapp-web.js/tree/patch-1",
+  "hotfix2":"https://github.com/Julzk/whatsapp-web.js/tarball/jkr_hotfix_8",
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
@@ -41,7 +43,7 @@
     "sequelize-typescript": "^1.1.0",
     "socket.io": "^3.0.5",
     "uuid": "^8.3.2",
-    "whatsapp-web.js": "https://github.com/Julzk/whatsapp-web.js/tarball/jkr_hotfix_7",
+    "whatsapp-web.js": "https://github.com/brunox64/whatsapp-web.js/tree/patch-1",
     "yup": "^0.32.8"
   },
   "devDependencies": {
