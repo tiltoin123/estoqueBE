@@ -13,7 +13,6 @@ import CheckIsValidContact from "../services/WbotServices/CheckIsValidContact";
 import GetProfilePicUrl from "../services/WbotServices/GetProfilePicUrl";
 import AppError from "../errors/AppError";
 import GetContactService from "../services/ContactServices/GetContactService";
-import ListContactTagsService from "../services/ContactTagsService/ListContactTagsService";
 
 type IndexQuery = {
   searchParam: string;
@@ -41,17 +40,12 @@ export const index = async (req: Request, res: Response): Promise<Response> => {
 
   const { storeId } = req.user;
 
-  const { contacts, count, hasMore } = await ListContactsService({
+  const { contacts, count, hasMore, tags } = await ListContactsService({
     storeId,
     searchParam,
     pageNumber
   });
-  let contactIds: number[] = []
-  contacts.forEach(contacts => {
-    contactIds.push(contacts.id)
-  });
-  const tags = await ListContactTagsService(contactIds)
-  //console.log("contactcontroleer", tags)
+  console.log(tags)
   return res.json({ contacts, count, hasMore, tags });
 };
 

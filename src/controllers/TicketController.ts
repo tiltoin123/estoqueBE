@@ -105,7 +105,7 @@ export const update = async (
 
   if (oldQueueId !== ticket.queueId) {
     const queue = await ShowQueueService(ticket.queueId)
-    await CreateContactTagService(ticket.contact, queue.name)
+    await CreateContactTagService(ticket.contactId, queue.name, ticket.storeId)
   }
 
   if (ticket.status === "closed") {

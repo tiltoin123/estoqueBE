@@ -1,5 +1,7 @@
 import { Op, Sequelize, fn, col } from "sequelize";
 import Contact from "../../models/Contact";
+import ContactTags from "../../models/ContactTags";
+import ListContactTagsService from "../ContactTagsService/ListContactTagsService";
 
 interface Request {
   storeId: number;
@@ -11,6 +13,7 @@ interface Response {
   contacts: Contact[];
   count: number;
   hasMore: boolean;
+  tags: ContactTags[] | null
 }
 
 const ListContactsService = async ({
@@ -48,11 +51,18 @@ const ListContactsService = async ({
     order: [["name", "ASC"]]
   });
 
+  let contactIds: number[] = []
+  contacts.forEach(contacts => {
+    contactIds.push(contacts.id)
+  });
+  const tags = await ListContactTagsService(contactIds)
+
   const hasMore = count > offset + contacts.length;
   return {
     contacts,
     count,
-    hasMore
+    hasMore,
+    tags
   };
 };
 
