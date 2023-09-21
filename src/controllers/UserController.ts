@@ -9,6 +9,7 @@ import ListUsersService from "../services/UserServices/ListUsersService";
 import UpdateUserService from "../services/UserServices/UpdateUserService";
 import ShowUserService from "../services/UserServices/ShowUserService";
 import DeleteUserService from "../services/UserServices/DeleteUserService";
+import CreateStoreService from "../services/StoreServices/CreateStoresService";
 
 type IndexQuery = {
   searchParam: string;
@@ -30,7 +31,6 @@ export const index = async (req: Request, res: Response): Promise<Response> => {
 
 export const store = async (req: Request, res: Response): Promise<Response> => {
   const { email, password, name, profile, queueIds, whatsappId } = req.body;
-  const storeId = req.user.storeId
   if (
     req.url === "/signup" &&
     (await CheckSettingsHelper("userCreation")) === "disabled"
@@ -39,7 +39,8 @@ export const store = async (req: Request, res: Response): Promise<Response> => {
   } else if (req.url !== "/signup" && req.user.profile !== "admin") {
     throw new AppError("ERR_NO_PERMISSION", 403);
   }
-
+  const store = await CreateStoreService({ email, name })
+  const storeId = store.storeId
   const user = await CreateUserService({
     storeId,
     email,

@@ -6,12 +6,11 @@ import DeleteTicketService from "../services/TicketServices/DeleteTicketService"
 import ListTicketsService from "../services/TicketServices/ListTicketsService";
 import ShowTicketService from "../services/TicketServices/ShowTicketService";
 import UpdateTicketService from "../services/TicketServices/UpdateTicketService";
-import SendWhatsAppMessage from "../services/WbotServices/SendWhatsAppMessage";
-import ShowWhatsAppService from "../services/WhatsappService/ShowWhatsAppService";
-import formatBody from "../helpers/Mustache";
 import NullifyQueueIdFromTicket from "../services/TicketServices/NullifyQueueIdFromTicket";
 import DeleteTimeOutService from "../services/TimeOutServices/DeleteTimeOutService";
 import ListContactTagsService from "../services/ContactTagsService/ListContactTagsService";
+import CreateContactTagService from "../services/ContactTagsService/CreateContactTagService";
+import ShowQueueService from "../services/QueueService/ShowQueueService";
 
 type IndexQuery = {
   searchParam: string;
@@ -99,10 +98,15 @@ export const update = async (
   const { ticketId } = req.params;
   const ticketData: TicketData = req.body;
 
-  const { ticket } = await UpdateTicketService({
+  const { ticket, oldQueueId } = await UpdateTicketService({
     ticketData,
     ticketId
   });
+
+  if (oldQueueId !== ticket.queueId) {
+    const queue = await ShowQueueService(ticket.queueId)
+    await CreateContactTagService(ticket.contact, queue.name)
+  }
 
   if (ticket.status === "closed") {
 

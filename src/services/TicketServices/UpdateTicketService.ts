@@ -20,6 +20,7 @@ interface Response {
   ticket: Ticket;
   oldStatus: string;
   oldUserId: number | undefined;
+  oldQueueId: number;
 }
 
 const UpdateTicketService = async ({
@@ -34,7 +35,7 @@ const UpdateTicketService = async ({
   if (whatsappId && ticket.whatsappId !== whatsappId) {
     await CheckContactOpenTickets(ticket.contactId, whatsappId);
   }
-
+  const oldQueueId = ticket.queueId
   const oldStatus = ticket.status;
   const oldUserId = ticket.user?.id;
 
@@ -70,7 +71,7 @@ const UpdateTicketService = async ({
       ticket
     });
 
-  return { ticket, oldStatus, oldUserId };
+  return { ticket, oldStatus, oldUserId, oldQueueId };
 };
 
 export default UpdateTicketService;
