@@ -3,7 +3,7 @@ import AppError from "../../errors/AppError";
 import Store from "../../models/Stores";
 
 interface Request {
-    name: string
+    storeName: string
     email: string
 }
 
@@ -14,11 +14,11 @@ interface Response {
 }
 
 const CreateStoreService = async ({
-    name,
+    storeName,
     email
 }: Request): Promise<Response> => {
     const schema = Yup.object().shape({
-        name: Yup.string()
+        storeName: Yup.string()
             .required()
             .min(6)
             .test(
@@ -49,21 +49,22 @@ const CreateStoreService = async ({
     });
 
     try {
-        await schema.validate({ email, name });
+        await schema.validate({ email, storeName });
     } catch (err) {
         throw new AppError(err.message);
     }
 
     const store = await Store.create({
-        name,
+        name: storeName,
         email
-    })
+    });
+
     const newStore = {
         storeId: store.id,
         name: store.name,
         email: store.email
-    }
-    return newStore
-}
+    };
+    return newStore;
+};
 
 export default CreateStoreService;

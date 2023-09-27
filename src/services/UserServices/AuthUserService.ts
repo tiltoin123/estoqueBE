@@ -39,6 +39,10 @@ const AuthUserService = async ({
   if (!user) {
     throw new AppError("ERR_INVALID_CREDENTIALS", 401);
   }
+  console.log(user.confirmationToken)
+  if (user.confirmationToken) {
+    throw new AppError("ERR_EMAIL_CONFIRMATION_IS_REQUIRED", 401);
+  }
 
   if (!(await user.checkPassword(password))) {
     throw new AppError("ERR_INVALID_CREDENTIALS", 401);

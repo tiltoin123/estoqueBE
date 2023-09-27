@@ -14,6 +14,7 @@ import apiRoutes from "./apiRoutes";
 import templatesRoutes from "./templateRoutes";
 import storeRoutes from "./storeRoutes";
 import templateControlsRoutes from "./templateControlsRoutes";
+import verifyEmailRoutes from "./verifyEmailRoutes";
 
 const routes = Router();
 
@@ -31,5 +32,6 @@ routes.use("/api/messages", apiRoutes);
 routes.use(templatesRoutes);
 routes.use(storeRoutes);
 routes.use(templateControlsRoutes);
+routes.use(verifyEmailRoutes)
 
 export default routes;
