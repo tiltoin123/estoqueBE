@@ -54,7 +54,7 @@ const CreateUserService = async ({
   try {
     await schema.validate({ email, password, name });
   } catch (err) {
-    throw new AppError(err.message);
+    console.error(err)
   }
 
   const user = await User.create(

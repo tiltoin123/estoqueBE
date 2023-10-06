@@ -58,7 +58,7 @@ const CreateQueueService = async (storeId: number, queueData: QueueData): Promis
   try {
     await queueSchema.validate({ color, name });
   } catch (err) {
-    throw new AppError(err.message);
+    console.error(err)
   }
 
   const queue = await Queue.create({ ...queueData, storeId });

@@ -33,6 +33,11 @@ import CreateOrUpdateTimeOutService from "../TimeOutServices/CreateOrUpdateTimeO
 import GetTimeOutConfigService from "../TimeOutServices/GetTimeOutConfigService";
 import moment from "moment";
 import DeleteTimeOutService from "../TimeOutServices/DeleteTimeOutService";
+import ShowQueueService from "../QueueService/ShowQueueService";
+import ShowStoreService from "../StoreServices/ShowStoreService";
+import GetBuyerChoices from "../../helpers/GetBuyerChoices";
+import SendTemplateMedia from "../TemplateServices/SendTemplateMedia";
+import SendOpenAiQuery from "../../helpers/SendOpenAiQuery";
 
 interface Session extends Client {
   id?: number;
@@ -120,7 +125,7 @@ const verifyMediaMessage = async (
     );
   } catch (err) {
     Sentry.captureException(err);
-    logger.error(err);
+    console.error(err);
   }
 
   const messageData = {
@@ -136,7 +141,7 @@ const verifyMediaMessage = async (
     mediaType: media.mimetype.split("/")[0],
     quotedMsgId: quotedMsg?.id
   };
-
+  //console.log(media)
   await ticket.update({ lastMessage: msg.body || media.filename });
   const newMessage = await CreateMessageService({ messageData });
 
@@ -234,6 +239,13 @@ const verifyQueue = async (
       ticketData: { queueId: queueId },
       ticketId: ticket.id
     });
+    /* if (queueId === 1) {
+      //await GetBuyerChoices()
+      const queue = await ShowQueueService(1)
+      const queueGreetingMessage = await wbot.sendMessage(`${contact.number}@c.us`, queue.greetingMessage);
+      await verifyMessageSent(queueGreetingMessage, ticket, contact, null, contact.storeId)
+    } */
+
 
     await DeleteTimeOutService(contact.storeId, contact.id)
   }
@@ -272,6 +284,7 @@ const handleInvalidOption = async (
     await verifyMessageSent(optionEnforcer, ticket, contact, 1, storeId);
   }
 };
+
 const verifyContactFullName = async (msg: WbotMessage, contact: Contact): Promise<Contact | undefined> => {
   const contactData = {
     extraInfo: [
@@ -285,6 +298,35 @@ const verifyContactFullName = async (msg: WbotMessage, contact: Contact): Promis
   const contactWFullName = await UpdateContactService({ contactData, contactId });
 
   return contactWFullName;
+};
+
+const verifyContactSelectedChoices = async (msg: WbotMessage, contact: Contact) => {
+  // 1-2  https://www.imobiliariafabioliporoni.com.br/comprar/terreno/ordem-valor/resultado-crescente/quantidade-12/
+  // 2-2  https://www.imobiliariafabioliporoni.com.br/comprar/apartamento/ordem-valor/resultado-crescente/quantidade-12/
+  // 3-2  https://www.imobiliariafabioliporoni.com.br/comprar/casa/ordem-valor/resultado-crescente/quantidade-12/
+  // 4-2  https://www.imobiliariafabioliporoni.com.br/comprar/chacara/ordem-valor/resultado-crescente/quantidade-12/
+  // 5-2  https://www.imobiliariafabioliporoni.com.br/comprar/rancho/ordem-valor/resultado-crescente/quantidade-12/
+  // 6-2  https://www.imobiliariafabioliporoni.com.br/comprar/rea_barracao_ponto_sala_sala-comercial_salao/ordem-valor/resultado-crescente/quantidade-12/
+
+  // 1-1-1  https://www.imobiliariafabioliporoni.com.br/permuta/ordem-valor/resultado-crescente/quantidade-12/
+  // 2-1-1  https://www.imobiliariafabioliporoni.com.br/permuta/ordem-valor/resultado-crescente/quantidade-12/
+  // 3-1-1  https://www.imobiliariafabioliporoni.com.br/permuta/ordem-valor/resultado-crescente/quantidade-12/
+  // 4-1-1  https://www.imobiliariafabioliporoni.com.br/permuta/ordem-valor/resultado-crescente/quantidade-12/
+  // 5-1-1  https://www.imobiliariafabioliporoni.com.br/permuta/ordem-valor/resultado-crescente/quantidade-12/
+  // 6-1-1  https://www.imobiliariafabioliporoni.com.br/permuta/ordem-valor/resultado-crescente/quantidade-12/
+
+  const store = await ShowStoreService(contact.storeId)
+
+
+  const linkData = {
+    extraInfo: [
+      {
+        name: "imóveis sugeridos",
+        value: store.siteUrl + msg.body
+      }
+    ]
+  };
+
 };
 
 const handleMessage = async (
@@ -355,6 +397,10 @@ const handleMessage = async (
 
     if (!msg.fromMe && ticket.status === "pending") {
 
+      //const templateMedia = await SendTemplateMedia(ticket, 2)
+      //console.log("tempaltemedia no wbotmessagelistaner", templateMedia)
+      //const gptQuery = await SendOpenAiQuery()
+      //console.log(gptQuery)
       if (msg.hasMedia) {
         await verifyMediaMessage(msg, ticket, storeId);
       }
@@ -366,7 +412,7 @@ const handleMessage = async (
         await verifyContactFullName(msg, contact)
       }
 
-      if (timeOutConfig && timeOutConfig.status && !handleTimeOut && ticket.queueId !== null) {
+      if (timeOutConfig && timeOutConfig.status && !handleTimeOut && ticket.queueId !== null && ticket.queueId !== 8) {
         handleTimeOut = await CreateOrUpdateTimeOutService(ticket.storeId, ticket.contactId)
       }
 
@@ -375,7 +421,6 @@ const handleMessage = async (
         let finishTimeout = moment(handleTimeOut?.createdAt).add(timeOutConfig.minutesDuration, 'm').toDate();
 
         if (!handleTimeOut || finishTimeout < new Date()) {
-
           let messageToSend = await templateSelector(contact)
 
 

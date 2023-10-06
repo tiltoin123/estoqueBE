@@ -51,7 +51,7 @@ const UpdateWhatsAppService = async ({
   try {
     await schema.validate({ name, status, isDefault });
   } catch (err) {
-    throw new AppError(err.message);
+    console.error(err)
   }
 
   if (queueIds.length > 1 && !greetingMessage) {

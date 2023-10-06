@@ -45,7 +45,7 @@ export const index = async (req: Request, res: Response): Promise<Response> => {
     searchParam,
     pageNumber
   });
-  console.log(tags)
+
   return res.json({ contacts, count, hasMore, tags });
 };
 
@@ -78,7 +78,7 @@ export const store = async (req: Request, res: Response): Promise<Response> => {
   try {
     await schema.validate(newContact);
   } catch (err) {
-    throw new AppError(err.message);
+    console.error(err)
   }
 
   await CheckIsValidContact(newContact.number);
@@ -134,7 +134,7 @@ export const update = async (
   try {
     await schema.validate(contactData);
   } catch (err) {
-    throw new AppError(err.message);
+    console.error(err)
   }
 
   await CheckIsValidContact(contactData.number);

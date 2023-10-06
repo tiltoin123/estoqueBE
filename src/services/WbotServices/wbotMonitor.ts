@@ -26,7 +26,7 @@ const wbotMonitor = async (
         await whatsapp.update({ status: newState });
       } catch (err) {
         Sentry.captureException(err);
-        logger.error(err);
+        console.error(err);
       }
 
       io.emit("whatsappSession", {
@@ -45,7 +45,7 @@ const wbotMonitor = async (
         await whatsapp.update({ battery, plugged });
       } catch (err) {
         Sentry.captureException(err);
-        logger.error(err);
+        console.error(err);
       }
 
       io.emit("whatsappSession", {
@@ -61,7 +61,7 @@ const wbotMonitor = async (
         await whatsapp.update({ status: "OPENING", session: "" });
       } catch (err) {
         Sentry.captureException(err);
-        logger.error(err);
+        console.error(err);
       }
 
       io.emit("whatsappSession", {
@@ -73,7 +73,7 @@ const wbotMonitor = async (
     });
   } catch (err) {
     Sentry.captureException(err);
-    logger.error(err);
+    console.error(err);
   }
 };
 

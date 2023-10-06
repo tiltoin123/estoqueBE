@@ -14,6 +14,8 @@ module.exports = {
                     id: 2,
                     message: "${contactFullName}, como podemos auxiliá-lo hoje? Digite o número correspondente a opção que melhor atende sua necessidade.",
                     lastMessage: 1,
+                    mediaType: "image/jpeg",
+                    mediaContent: "C:\\git\\chatrock\\chatrock-api\\public\\1696534918798.jpg",
                     storeId: 1
                 },
                 {
@@ -45,7 +47,8 @@ module.exports = {
                 {
                     id: 7,
                     message: "Agradecemos por compartilhar essas informações conosco! Já estamos dando prioridade à sua solicitação e encaminhamos para a equipe responsável." +
-                        " Se estiver fora do horário comercial, fique tranquilo! Iremos atendê-lo o mais rápido possível ao retornarmos. Muito obrigado pela compreensão! 😊",
+                        " Se estiver fora do horário comercial, fique tranquilo! Iremos atendê-lo o mais rápido possível ao retornarmos. Muito obrigado pela compreensão! 😊\n" +
+                        "https://www.imobiliariafabioliporoni.com.br/comprar",
                     lastMessage: 4,
                     condition: "2",
                     queueId: 1,
@@ -54,7 +57,8 @@ module.exports = {
                 {
                     id: 8,
                     message: "Agradecemos por compartilhar essas informações conosco! Já estamos dando prioridade à sua solicitação e encaminhamos para a equipe responsável." +
-                        " Se estiver fora do horário comercial, fique tranquilo! Iremos atendê-lo o mais rápido possível ao retornarmos. Muito obrigado pela compreensão! 😊",
+                        " Se estiver fora do horário comercial, fique tranquilo! Iremos atendê-lo o mais rápido possível ao retornarmos. Muito obrigado pela compreensão! 😊\n" +
+                        "https://www.imobiliariafabioliporoni.com.br/comprar",
                     lastMessage: 6,
                     queueId: 1,
                     storeId: 1
@@ -123,6 +127,14 @@ module.exports = {
                         " Se estiver fora do horário comercial, fique tranquilo! Iremos atendê-lo o mais rápido possível ao retornarmos. Muito obrigado pela compreensão! 😊",
                     lastMessage: 15,
                     queueId: 7,
+                    storeId: 1
+                },
+                {
+                    id: 17,
+                    message: "O Tio Fábio é a nossa inteligência artificial e está pronto para responder suas dúvidas e curiosidades sobre negócios imobiliários, faça uma pergunta!",
+                    lastMessage: 2,
+                    condition: "8",
+                    queueId: 8,
                     storeId: 1
                 }
             ],
