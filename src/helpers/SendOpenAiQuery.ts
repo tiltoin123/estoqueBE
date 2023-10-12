@@ -5,7 +5,7 @@ import ListStoreAiService from '../services/StoreAiServices.ts/ListStoreAiServic
 const openai = new OpenAI();
 
 const SendOpenAiQuery = async function (storeId: number, userQuery: string): Promise<String> {
-    //arrumar isso aqui storeAi nao pode ser um array
+    //arrumar isso aqui storeAi nao pode ser um array isso tem que buscar a ia por id(pk)
     const storeAi = await ListStoreAiService(storeId)
     const completion = await openai.chat.completions.create({
         model: "gpt-3.5-turbo",

@@ -5,7 +5,6 @@ import ShowStoreAiService from "./ShowStoreAiService"
 interface StoreAiData {
     systemPrompt?: string
     name?: string
-    storeId: number
 }
 
 interface Request {
@@ -22,9 +21,9 @@ interface Response {
 
 const UpdateStoreAiService = async ({
     storeAiData,
-    storeAiId
+    storeAiId,
 }: Request): Promise<Response> => {
-
+    const { name, systemPrompt } = storeAiData
     const storeAi = await StoreAi.findByPk(storeAiId)
 
     if (!storeAi) {
@@ -32,7 +31,8 @@ const UpdateStoreAiService = async ({
     }
 
     await storeAi.update({
-        storeAiData
+        name,
+        systemPrompt
     })
 
     return storeAi

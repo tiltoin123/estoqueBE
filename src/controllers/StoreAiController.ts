@@ -36,7 +36,6 @@ export const store = async (req: Request, res: Response): Promise<Response> => {
 };
 
 export const show = async (req: Request, res: Response): Promise<Response> => {
-    console.log(req.params, "show")
     const { storeAiId } = req.params;
 
     const storeAi = await ShowStoreAiService(storeAiId);
@@ -50,17 +49,18 @@ export const update = async (
     console.log(req.params, "update")
     const { storeAiId } = req.params
     const storeAiData: StoreAiData = req.body
+    console.log(storeAiData)
     const storeAi = await UpdateStoreAiService({
         storeAiData,
         storeAiId
     });
-
+    console.log(storeAi)
     const io = getIO();
     io.emit("storeAi", {
         action: "update",
         storeAi
     });
-    console.log("update")
+    console.log(storeAi)
     return res.status(201).json(storeAi);
 };
 
@@ -69,7 +69,7 @@ export const remove = async (
     res: Response
 ): Promise<Response> => {
     const { storeAiId } = req.params;
-    console.log(req.params, "delete")
+
     await DeleteStoreAiService(storeAiId);
 
     const io = getIO();
@@ -77,6 +77,5 @@ export const remove = async (
         action: "delete",
         storeAiId: +storeAiId
     });
-    console.log("apaga")
     return res.status(200).send();
 };
