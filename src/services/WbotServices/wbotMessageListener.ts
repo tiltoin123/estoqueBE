@@ -399,7 +399,6 @@ const handleMessage = async (
 
       //const templateMedia = await SendTemplateMedia(ticket, 2)
       //console.log("tempaltemedia no wbotmessagelistaner", templateMedia)
-      //const gptQuery = await SendOpenAiQuery()
       //console.log(gptQuery)
       if (msg.hasMedia) {
         await verifyMediaMessage(msg, ticket, storeId);
@@ -411,36 +410,41 @@ const handleMessage = async (
       if (lastSentMessage?.templateId === 1 && msg.type === "chat") {
         await verifyContactFullName(msg, contact)
       }
-
-      if (timeOutConfig && timeOutConfig.status && !handleTimeOut && ticket.queueId !== null && ticket.queueId !== 8) {
-        handleTimeOut = await CreateOrUpdateTimeOutService(ticket.storeId, ticket.contactId)
+      if (ticket.queueId === 8) {
+        const gptQuery = await SendOpenAiQuery(ticket.storeId, ticket.lastMessage)
+        const sentGptQuery = await wbot.sendMessage(`${contact.number}@c.us`, gptQuery.toString())
+        await verifyMessageSent(sentGptQuery, ticket, contact, null, ticket.storeId)
       }
+      if (ticket.queueId !== 8) {
+        if (timeOutConfig && timeOutConfig.status && !handleTimeOut && ticket.queueId !== null) {
+          handleTimeOut = await CreateOrUpdateTimeOutService(ticket.storeId, ticket.contactId)
+        }
 
-      if (msg.type === "chat" && !chat.isGroup && !msg.hasMedia) {
+        if (msg.type === "chat" && !chat.isGroup && !msg.hasMedia) {
 
-        let finishTimeout = moment(handleTimeOut?.createdAt).add(timeOutConfig.minutesDuration, 'm').toDate();
+          let finishTimeout = moment(handleTimeOut?.createdAt).add(timeOutConfig.minutesDuration, 'm').toDate();
 
-        if (!handleTimeOut || finishTimeout < new Date()) {
-          let messageToSend = await templateSelector(contact)
+          if (!handleTimeOut || finishTimeout < new Date()) {
+            let messageToSend = await templateSelector(contact)
 
 
 
-          await handleInvalidOption(wbot, contact, messageToSend, ticket, storeId)
-          const sentMessage = await wbot.sendMessage(
-            `${contact.number}@c.us`,
-            messageToSend.message
-          );
-          await verifyMessageSent(sentMessage, ticket, contact, messageToSend.id, storeId);
-          await verifyQueue(wbot, ticket, messageToSend.queueId, contact)
+            await handleInvalidOption(wbot, contact, messageToSend, ticket, storeId)
+            const sentMessage = await wbot.sendMessage(
+              `${contact.number}@c.us`,
+              messageToSend.message
+            );
+            await verifyMessageSent(sentMessage, ticket, contact, messageToSend.id, storeId);
+            await verifyQueue(wbot, ticket, messageToSend.queueId, contact)
 
-        } else {
-          if (lastSentMessage?.body != timeOutConfig!.notice.toString()) {
-            const noticeSent = await wbot.sendMessage(`${contact.number}@c.us`, timeOutConfig!.notice.toString());
-            await verifyMessageSent(noticeSent, ticket, contact, null, storeId)
+          } else {
+            if (lastSentMessage?.body != timeOutConfig!.notice.toString()) {
+              const noticeSent = await wbot.sendMessage(`${contact.number}@c.us`, timeOutConfig!.notice.toString());
+              await verifyMessageSent(noticeSent, ticket, contact, null, storeId)
+            }
           }
         }
       }
-
     }
 
     if (msg.fromMe && ticket.status === "open") {

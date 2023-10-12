@@ -61,6 +61,12 @@ const userQueueData = [
         createdAt: new Date(),
         updatedAt: new Date()
     },
+    {
+        userId: 2,
+        queueId: 8,
+        createdAt: new Date(),
+        updatedAt: new Date()
+    },
 ]
 
 module.exports = {

@@ -1,25 +1,20 @@
 import OpenAI from 'openai';
 import { Request, Response } from 'express';
+import ShowStoreAiService from '../services/StoreAiServices.ts/ShowStoreAiService';
+import ListStoreAiService from '../services/StoreAiServices.ts/ListStoreAiService';
 const openai = new OpenAI();
 
-const SendOpenAiQuery = async function () {
-
-
-    const prompt = "alo galera de cowboy"
-    const systemPrompt = "Tio fábio é um homem de 70 anos bem humorado e muito experiente em negócios imobiliários," +
-        " ele está disposto a averiguar e entender problemas," +
-        " situações e negócios do ramo imobiliário para ajudar o usuário a comprar e vender imóveis com a sua imobiliária," +
-        " imobiliária fábio liporoni. Para outros assuntos não relacionados você deverá responder da seguinte forma:" +
-        " hmm, acho que essa pergunta não está relacionada a imóveis, infelizmente não posso te ajudar."
-
-
+const SendOpenAiQuery = async function (storeId: number, userQuery: string): Promise<String> {
+    //arrumar isso aqui storeAi nao pode ser um array
+    const storeAi = await ListStoreAiService(storeId)
     const completion = await openai.chat.completions.create({
         model: "gpt-3.5-turbo",
-        messages: [{ role: "system", content: systemPrompt }, { role: "user", content: prompt }]
+        messages: [{ role: "system", content: storeAi[0].systemPrompt.toString() }, { role: "user", content: userQuery }]
     });
-    console.log(completion.choices)
+    const gptResponse = completion.choices[0].message.content
+    console.log(completion.usage)
     //res.status(200).json({ result: completion.choices });
-
+    return gptResponse!
 }
 
 export default SendOpenAiQuery;

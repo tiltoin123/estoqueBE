@@ -15,6 +15,7 @@ import templatesRoutes from "./templateRoutes";
 import storeRoutes from "./storeRoutes";
 import templateControlsRoutes from "./templateControlsRoutes";
 import verifyEmailRoutes from "./verifyEmailRoutes";
+import storeAiRoutes from "./storeAiRoutes"
 
 const routes = Router();
 
@@ -33,5 +34,6 @@ routes.use(templatesRoutes);
 routes.use(storeRoutes);
 routes.use(templateControlsRoutes);
 routes.use(verifyEmailRoutes)
+routes.use(storeAiRoutes)
 
 export default routes;
