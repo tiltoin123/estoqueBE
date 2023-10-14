@@ -11,7 +11,7 @@ module.exports = {
             },
             name: {
                 type: DataTypes.TEXT,
-                allowNull: false
+                allowNull: false,
             },
             systemPrompt: {
                 type: DataTypes.TEXT,
@@ -23,7 +23,6 @@ module.exports = {
                 onUpdate: "CASCADE",
                 onDelete: "CASCADE",
                 allowNull: false,
-                unique: true
             },
             createdAt: {
                 type: DataTypes.DATE,

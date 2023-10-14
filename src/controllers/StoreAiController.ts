@@ -6,6 +6,11 @@ import UpdateStoreAiService from "../services/StoreAiServices.ts/UpdateStoreAISe
 import DeleteStoreAiService from "../services/StoreAiServices.ts/DeleteStoreAiService";
 import ListStoreAiService from "../services/StoreAiServices.ts/ListStoreAiService";
 
+type IndexQuery = {
+    searchParam: string;
+    pageNumber: string;
+};
+
 interface StoreAiData {
     systemPrompt?: string
     name?: string
@@ -14,10 +19,15 @@ interface StoreAiData {
 
 
 export const index = async (req: Request, res: Response): Promise<Response> => {
+    const { searchParam, pageNumber } = req.query as IndexQuery;
     const storeId = req.user.storeId
-    const storeAi = await ListStoreAiService(storeId);
+    const { storeAi, count, hasMore } = await ListStoreAiService({
+        storeId,
+        searchParam,
+        pageNumber
+    });
 
-    return res.status(200).json(storeAi);
+    return res.status(200).json({ storeAi, count, hasMore });
 };
 
 export const store = async (req: Request, res: Response): Promise<Response> => {
@@ -27,7 +37,7 @@ export const store = async (req: Request, res: Response): Promise<Response> => {
     const storeAi = await CreateStoreAiService({ storeId, name, systemPrompt });
 
     const io = getIO();
-    io.emit("storeAi", {
+    io.emit("storeai", {
         action: "create",
         storeAi
     });
@@ -56,7 +66,7 @@ export const update = async (
     });
     console.log(storeAi)
     const io = getIO();
-    io.emit("storeAi", {
+    io.emit("storeai", {
         action: "update",
         storeAi
     });
@@ -73,7 +83,7 @@ export const remove = async (
     await DeleteStoreAiService(storeAiId);
 
     const io = getIO();
-    io.emit("storeAi", {
+    io.emit("storeai", {
         action: "delete",
         storeAiId: +storeAiId
     });

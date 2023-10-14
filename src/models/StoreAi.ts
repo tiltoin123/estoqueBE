@@ -22,7 +22,6 @@ class StoreAi extends Model<StoreAi> {
     @Column({ type: DataType.INTEGER })
     id: number;
 
-    @Unique
     @Column({ type: DataType.TEXT })
     name: string
 
