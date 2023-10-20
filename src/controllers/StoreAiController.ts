@@ -8,8 +8,8 @@ import ListStoreAiService from "../services/StoreAiServices.ts/ListStoreAiServic
 import ListQueuesService from "../services/QueueService/ListQueuesService";
 
 type IndexQuery = {
-    searchParam: string;
-    pageNumber: string;
+    searchParam?: string;
+    pageNumber?: string;
 };
 
 interface StoreAiData {
