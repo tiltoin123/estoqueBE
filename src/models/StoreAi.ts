@@ -10,8 +10,10 @@ import {
     BelongsTo,
     DataType,
     Unique,
+    HasMany, // Import this decorator
 } from "sequelize-typescript";
 import Store from "./Stores";
+import Queue from "./Queue";
 
 @Table({
     tableName: "StoreAi",
@@ -23,7 +25,7 @@ class StoreAi extends Model<StoreAi> {
     id: number;
 
     @Column({ type: DataType.TEXT })
-    name: string
+    name: string;
 
     @Column({ type: DataType.TEXT })
     systemPrompt: string;
@@ -33,13 +35,16 @@ class StoreAi extends Model<StoreAi> {
     storeId: number;
 
     @BelongsTo(() => Store)
-    store: Store
+    store: Store;
 
     @CreatedAt
     createdAt: Date;
 
     @UpdatedAt
     updatedAt: Date;
+
+    @HasMany(() => Queue)
+    queues: Queue[];
 }
 
 export default StoreAi;

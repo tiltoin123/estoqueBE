@@ -17,6 +17,7 @@ import UserQueue from "./UserQueue";
 import Whatsapp from "./Whatsapp";
 import WhatsappQueue from "./WhatsappQueue";
 import Store from "./Stores";
+import StoreAi from "./StoreAi";
 
 @Table
 class Queue extends Model<Queue> {
@@ -54,6 +55,13 @@ class Queue extends Model<Queue> {
 
   @BelongsTo(() => Store)
   store: Store
+
+  @ForeignKey(() => StoreAi)
+  @Column
+  storeAiId: number;
+
+  @BelongsTo(() => StoreAi)
+  storeAi: StoreAi;
 }
 
 export default Queue;

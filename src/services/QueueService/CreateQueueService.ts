@@ -8,6 +8,7 @@ interface QueueData {
   name: string;
   color: string;
   greetingMessage?: string;
+  storeAiId?: number
 }
 
 const CreateQueueService = async (storeId: number, queueData: QueueData): Promise<Queue> => {
@@ -60,7 +61,6 @@ const CreateQueueService = async (storeId: number, queueData: QueueData): Promis
   } catch (err) {
     console.error(err)
   }
-
   const queue = await Queue.create({ ...queueData, storeId });
 
   return queue;

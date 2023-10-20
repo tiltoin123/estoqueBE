@@ -5,6 +5,7 @@ import ShowStoreAiService from "../services/StoreAiServices.ts/ShowStoreAiServic
 import UpdateStoreAiService from "../services/StoreAiServices.ts/UpdateStoreAIService";
 import DeleteStoreAiService from "../services/StoreAiServices.ts/DeleteStoreAiService";
 import ListStoreAiService from "../services/StoreAiServices.ts/ListStoreAiService";
+import ListQueuesService from "../services/QueueService/ListQueuesService";
 
 type IndexQuery = {
     searchParam: string;
@@ -21,13 +22,14 @@ interface StoreAiData {
 export const index = async (req: Request, res: Response): Promise<Response> => {
     const { searchParam, pageNumber } = req.query as IndexQuery;
     const storeId = req.user.storeId
+    const queues = await ListQueuesService(storeId)
     const { storeAi, count, hasMore } = await ListStoreAiService({
         storeId,
         searchParam,
         pageNumber
     });
 
-    return res.status(200).json({ storeAi, count, hasMore });
+    return res.status(200).json({ storeAi, count, hasMore, queues });
 };
 
 export const store = async (req: Request, res: Response): Promise<Response> => {
@@ -56,21 +58,21 @@ export const update = async (
     req: Request,
     res: Response
 ): Promise<Response> => {
-    console.log(req.params, "update")
+
     const { storeAiId } = req.params
     const storeAiData: StoreAiData = req.body
-    console.log(storeAiData)
+
     const storeAi = await UpdateStoreAiService({
         storeAiData,
         storeAiId
     });
-    console.log(storeAi)
+
     const io = getIO();
     io.emit("storeai", {
         action: "update",
         storeAi
     });
-    console.log(storeAi)
+
     return res.status(201).json(storeAi);
 };
 
