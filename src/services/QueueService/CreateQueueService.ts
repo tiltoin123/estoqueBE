@@ -1,6 +1,7 @@
 import * as Yup from "yup";
 import AppError from "../../errors/AppError";
 import Queue from "../../models/Queue";
+import StoreAi from "../../models/StoreAi";
 
 
 
@@ -63,6 +64,16 @@ const CreateQueueService = async (storeId: number, queueData: QueueData): Promis
   }
   const queue = await Queue.create({ ...queueData, storeId });
 
+  await queue.reload({
+    attributes: ["id", "name", "color", "greetingMessage", "storeId", "storeAiId"],
+    include: [{
+      model: StoreAi,
+      as: "storeAi",
+      attributes: ["id", "name"],
+      required: false,
+      duplicating: false,
+    },]
+  })
   return queue;
 };
 

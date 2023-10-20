@@ -42,7 +42,6 @@ export const update = async (
   res: Response
 ): Promise<Response> => {
   const { queueId } = req.params;
-  console.log(req.body)
   const queue = await UpdateQueueService(queueId, req.body);
 
   const io = getIO();
