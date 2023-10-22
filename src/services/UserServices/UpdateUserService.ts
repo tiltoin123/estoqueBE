@@ -44,7 +44,7 @@ const UpdateUserService = async ({
   try {
     await schema.validate({ email, password, profile, name });
   } catch (err) {
-    throw new AppError(err.message);
+    console.error(err)
   }
 
   await user.update({

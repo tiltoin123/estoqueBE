@@ -57,7 +57,6 @@ const templateSelector = async (contact: Contact) => {
     if (!contactFullName) {
         return await templateAssembler(firstMessageTemplate, contact);
     }
-    console.log(contactFullName)
     return await templateAssembler(firstMenu, contact);
 
 }

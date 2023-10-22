@@ -57,6 +57,14 @@ const queueData = [
         updatedAt: new Date(),
         storeId: 1,
     },
+    {
+        name: "Tio fábio",
+        color: "#FFD200",
+        greetingMessage: "Seja Bem vindo ao Canal do tio fábio, nossa inteligência artificial.",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        storeId: 1,
+    },
 ];
 
 module.exports = {

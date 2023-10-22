@@ -33,55 +33,59 @@ module.exports = {
                 updatedAt: new Date(), backMenu: false,
             },
             {
-                id: 8, valor: "Terreno", choice: "1", templateId: 3, createdAt: new Date(),
+                id: 8, valor: "Inteligência artificial Tio Fábio", choice: "8", templateId: 2, createdAt: new Date(),
+                updatedAt: new Date(), backMenu: false,
+            },
+            {
+                id: 9, valor: "Terreno", choice: "1", templateId: 3, createdAt: new Date(),
                 updatedAt: new Date(), backMenu: false
             },
             {
-                id: 9, valor: "Apartamento", choice: "2", templateId: 3, createdAt: new Date(),
+                id: 10, valor: "Apartamento", choice: "2", templateId: 3, createdAt: new Date(),
                 updatedAt: new Date(), backMenu: false
             },
             {
-                id: 10, valor: "Casa", choice: "3", templateId: 3, createdAt: new Date(),
+                id: 11, valor: "Casa", choice: "3", templateId: 3, createdAt: new Date(),
                 updatedAt: new Date(), backMenu: false
             },
             {
-                id: 11, valor: "Chácara", choice: "4", templateId: 3, createdAt: new Date(),
+                id: 12, valor: "Chácara", choice: "4", templateId: 3, createdAt: new Date(),
                 updatedAt: new Date(), backMenu: false
             },
             {
-                id: 12, valor: "Rancho", choice: "5", templateId: 3, createdAt: new Date(),
+                id: 13, valor: "Rancho", choice: "5", templateId: 3, createdAt: new Date(),
                 updatedAt: new Date(), backMenu: false
             },
             {
-                id: 13, valor: "Outros", choice: "6", templateId: 3, createdAt: new Date(),
+                id: 14, valor: "Outros", choice: "6", templateId: 3, createdAt: new Date(),
                 updatedAt: new Date(), backMenu: false
             },
             {
-                id: 14, valor: "Voltar ao menu principal", choice: "0", templateId: 3, createdAt: new Date(),
+                id: 15, valor: "Voltar ao menu principal", choice: "0", templateId: 3, createdAt: new Date(),
                 updatedAt: new Date(), backMenu: true
             },
             {
-                id: 15, valor: "Sim", choice: "1", templateId: 4, createdAt: new Date(),
+                id: 16, valor: "Sim", choice: "1", templateId: 4, createdAt: new Date(),
                 updatedAt: new Date(), backMenu: false
             },
             {
-                id: 16, valor: "Não", choice: "2", templateId: 4, createdAt: new Date(),
+                id: 17, valor: "Não", choice: "2", templateId: 4, createdAt: new Date(),
                 updatedAt: new Date(), backMenu: false
             },
             {
-                id: 17, valor: "Voltar ao menu principal", choice: "0", templateId: 4, createdAt: new Date(),
+                id: 18, valor: "Voltar ao menu principal", choice: "0", templateId: 4, createdAt: new Date(),
                 updatedAt: new Date(), backMenu: true
             },
             {
-                id: 18, valor: "Sim", choice: "1", templateId: 6, createdAt: new Date(),
+                id: 19, valor: "Sim", choice: "1", templateId: 6, createdAt: new Date(),
                 updatedAt: new Date(), backMenu: false
             },
             {
-                id: 19, valor: "Não", choice: "2", templateId: 6, createdAt: new Date(),
+                id: 20, valor: "Não", choice: "2", templateId: 6, createdAt: new Date(),
                 updatedAt: new Date(), backMenu: false
             },
             {
-                id: 20, valor: "Voltar ao menu principal", choice: "0", templateId: 6, createdAt: new Date(),
+                id: 21, valor: "Voltar ao menu principal", choice: "0", templateId: 6, createdAt: new Date(),
                 updatedAt: new Date(), backMenu: true
             },
         ]

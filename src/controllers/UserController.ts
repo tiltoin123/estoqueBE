@@ -29,7 +29,7 @@ export const index = async (req: Request, res: Response): Promise<Response> => {
 };
 
 export const store = async (req: Request, res: Response): Promise<Response> => {
-  const { email, password, name, profile, queueIds, whatsappId, storeName } = req.body;
+  const { email, password, name, profile, queueIds, whatsappId, storeName, storeSite } = req.body;
 
 
   if (
@@ -40,7 +40,7 @@ export const store = async (req: Request, res: Response): Promise<Response> => {
   } else if (req.url !== "/signup" && req.user.profile !== "admin") {
     throw new AppError("ERR_NO_PERMISSION", 403);
   }
-  const store = await CreateStoreService({ storeName, email })
+  const store = await CreateStoreService({ storeName, email, storeSite })
   const storeId = store.storeId
   const user = await CreateUserService({
     storeId,

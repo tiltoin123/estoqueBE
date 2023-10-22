@@ -3,11 +3,13 @@ import * as Yup from "yup";
 import AppError from "../../errors/AppError";
 import Queue from "../../models/Queue";
 import ShowQueueService from "./ShowQueueService";
+import StoreAi from "../../models/StoreAi";
 
 interface QueueData {
   name?: string;
   color?: string;
   greetingMessage?: string;
+  storeAiId?: number
 }
 
 const UpdateQueueService = async (
@@ -60,12 +62,23 @@ const UpdateQueueService = async (
   try {
     await queueSchema.validate({ color, name });
   } catch (err) {
-    throw new AppError(err.message);
+    console.error(err)
   }
 
   const queue = await ShowQueueService(queueId);
 
   await queue.update(queueData);
+
+  await queue.reload({
+    attributes: ["id", "name", "color", "greetingMessage", "storeId", "storeAiId"],
+    include: [{
+      model: StoreAi,
+      as: "storeAi",
+      attributes: ["id", "name"],
+      required: false,
+      duplicating: false,
+    },]
+  })
 
   return queue;
 };

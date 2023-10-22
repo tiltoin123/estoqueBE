@@ -27,6 +27,12 @@ class Template extends Model<Template> {
     @Column({ type: DataType.STRING, defaultValue: null })
     condition: string | null;
 
+    @Column({ type: DataType.STRING, defaultValue: null })
+    mediaType: string | null;
+
+    @Column({ type: DataType.STRING, defaultValue: null })
+    mediaContent: string | null;
+
     @ForeignKey(() => Queue)
     @Column
     queueId: number;

@@ -38,6 +38,10 @@ class Store extends Model<Store> {
     @Column
     email: string;
 
+    @Unique
+    @Column
+    siteUrl: string;
+
     @CreatedAt
     createdAt: Date;
 

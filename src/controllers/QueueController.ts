@@ -5,6 +5,7 @@ import DeleteQueueService from "../services/QueueService/DeleteQueueService";
 import ListQueuesService from "../services/QueueService/ListQueuesService";
 import ShowQueueService from "../services/QueueService/ShowQueueService";
 import UpdateQueueService from "../services/QueueService/UpdateQueueService";
+import ListStoreAiService from "../services/StoreAiServices.ts/ListStoreAiService";
 
 export const index = async (req: Request, res: Response): Promise<Response> => {
   const storeId = req.user.storeId
@@ -14,10 +15,9 @@ export const index = async (req: Request, res: Response): Promise<Response> => {
 };
 
 export const store = async (req: Request, res: Response): Promise<Response> => {
-  const { name, color, greetingMessage } = req.body;
+  const { name, color, greetingMessage, storeAiId } = req.body;
   const storeId = req.user.storeId
-  const queue = await CreateQueueService(storeId, { name, color, greetingMessage });
-
+  const queue = await CreateQueueService(storeId, { name, color, greetingMessage, storeAiId });
   const io = getIO();
   io.emit("queue", {
     action: "update",
@@ -29,10 +29,12 @@ export const store = async (req: Request, res: Response): Promise<Response> => {
 
 export const show = async (req: Request, res: Response): Promise<Response> => {
   const { queueId } = req.params;
-
+  const storeId = req.user.storeId
   const queue = await ShowQueueService(queueId);
+  const { storeAi } = await ListStoreAiService({ storeId })
 
-  return res.status(200).json(queue);
+  return res.status(200).json({ queue, storeAi });
+  //return res.status(200).json(queue);
 };
 
 export const update = async (
@@ -40,7 +42,6 @@ export const update = async (
   res: Response
 ): Promise<Response> => {
   const { queueId } = req.params;
-
   const queue = await UpdateQueueService(queueId, req.body);
 
   const io = getIO();

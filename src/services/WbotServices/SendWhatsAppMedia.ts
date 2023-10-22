@@ -17,13 +17,16 @@ const SendWhatsAppMedia = async ({
   ticket,
   body
 }: Request): Promise<WbotMessage> => {
+  //console.log("media", media)
   try {
     const wbot = await GetTicketWbot(ticket);
     const hasBody = body
       ? formatBody(body as string, ticket.contact)
       : undefined;
+    //console.log("hasbody", hasBody)
 
     const newMedia = MessageMedia.fromFilePath(media.path);
+    //console.log("newmedia", newMedia)
     const sentMessage = await wbot.sendMessage(
       `${ticket.contact.number}@${ticket.isGroup ? "g" : "c"}.us`,
       newMedia,
@@ -32,11 +35,9 @@ const SendWhatsAppMedia = async ({
         sendAudioAsVoice: true
       }
     );
-
     await ticket.update({ lastMessage: body || media.filename });
 
     fs.unlinkSync(media.path);
-
     return sentMessage;
   } catch (err) {
     console.log(err);

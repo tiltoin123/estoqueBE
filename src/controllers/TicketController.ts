@@ -65,7 +65,7 @@ export const index = async (req: Request, res: Response): Promise<Response> => {
     contactIds.push(ticket.contactId)
   });
   const tags = await ListContactTagsService(contactIds)
-  //console.log(tags)
+
   return res.status(200).json({ tickets, count, hasMore, tags });
 };
 
@@ -85,7 +85,6 @@ export const store = async (req: Request, res: Response): Promise<Response> => {
 
 export const show = async (req: Request, res: Response): Promise<Response> => {
   const { ticketId } = req.params;
-  console.log(req.params)
   const contact = await ShowTicketService(ticketId);
 
   return res.status(200).json(contact);

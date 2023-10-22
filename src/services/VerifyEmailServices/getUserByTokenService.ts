@@ -3,7 +3,6 @@ import AppError from "../../errors/AppError";
 
 
 const getUserByToken = async (confirmationToken: string): Promise<User> => {
-    console.log("getusertoken", confirmationToken)
     const user = await User.findOne({
         where: {
             confirmationToken
