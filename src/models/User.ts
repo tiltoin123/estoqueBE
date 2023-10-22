@@ -31,6 +31,8 @@ class User extends Model<User> {
   @Column
   id: number;
 
+  @AllowNull(false)
+  @Unique
   @Column
   name: string;
 
@@ -44,6 +46,10 @@ class User extends Model<User> {
 
   @Column
   passwordHash: string;
+
+  @Unique
+  @Column
+  confirmationToken: string;
 
   @Default(0)
   @Column

@@ -3,7 +3,6 @@ import { getIO } from "../libs/socket";
 
 import CheckSettingsHelper from "../helpers/CheckSettings";
 import AppError from "../errors/AppError";
-
 import CreateUserService from "../services/UserServices/CreateUserService";
 import ListUsersService from "../services/UserServices/ListUsersService";
 import UpdateUserService from "../services/UserServices/UpdateUserService";
@@ -30,7 +29,9 @@ export const index = async (req: Request, res: Response): Promise<Response> => {
 };
 
 export const store = async (req: Request, res: Response): Promise<Response> => {
-  const { email, password, name, profile, queueIds, whatsappId } = req.body;
+  const { email, password, name, profile, queueIds, whatsappId, storeName } = req.body;
+
+
   if (
     req.url === "/signup" &&
     (await CheckSettingsHelper("userCreation")) === "disabled"
@@ -39,7 +40,7 @@ export const store = async (req: Request, res: Response): Promise<Response> => {
   } else if (req.url !== "/signup" && req.user.profile !== "admin") {
     throw new AppError("ERR_NO_PERMISSION", 403);
   }
-  const store = await CreateStoreService({ email, name })
+  const store = await CreateStoreService({ storeName, email })
   const storeId = store.storeId
   const user = await CreateUserService({
     storeId,

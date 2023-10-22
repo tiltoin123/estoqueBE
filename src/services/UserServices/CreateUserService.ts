@@ -1,8 +1,9 @@
 import * as Yup from "yup";
-
+import crypto from "crypto"
 import AppError from "../../errors/AppError";
 import { SerializeUser } from "../../helpers/SerializeUser";
 import User from "../../models/User";
+import sendEmail from "../../helpers/sendEmail";
 
 interface Request {
   storeId: number
@@ -30,6 +31,7 @@ const CreateUserService = async ({
   profile = "admin",
   whatsappId
 }: Request): Promise<Response> => {
+  const confirmationToken = crypto.randomBytes(20).toString('hex')
   const schema = Yup.object().shape({
     name: Yup.string().required().min(2),
     email: Yup.string()
@@ -59,6 +61,7 @@ const CreateUserService = async ({
     {
       storeId,
       email,
+      confirmationToken,
       password,
       name,
       profile,
@@ -70,6 +73,8 @@ const CreateUserService = async ({
   await user.$set("queues", queueIds);
 
   await user.reload();
+
+  await sendEmail(user.email, user.confirmationToken)
 
   return SerializeUser(user);
 };
