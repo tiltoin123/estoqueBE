@@ -33,6 +33,11 @@ class Store extends Model<Store> {
     @Column
     name: string;
 
+    @AllowNull(false)
+    @Unique
+    @Column
+    email: string;
+
     @CreatedAt
     createdAt: Date;
 

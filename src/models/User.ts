@@ -13,7 +13,9 @@ import {
   HasMany,
   BelongsToMany,
   ForeignKey,
-  BelongsTo
+  BelongsTo,
+  AllowNull,
+  Unique
 } from "sequelize-typescript";
 import { hash, compare } from "bcryptjs";
 import Ticket from "./Ticket";
@@ -32,6 +34,8 @@ class User extends Model<User> {
   @Column
   name: string;
 
+  @AllowNull(false)
+  @Unique
   @Column
   email: string;
 

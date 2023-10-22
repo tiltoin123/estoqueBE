@@ -33,8 +33,6 @@ import CreateOrUpdateTimeOutService from "../TimeOutServices/CreateOrUpdateTimeO
 import GetTimeOutConfigService from "../TimeOutServices/GetTimeOutConfigService";
 import moment from "moment";
 import DeleteTimeOutService from "../TimeOutServices/DeleteTimeOutService";
-import CreateContactTagService from "../ContactTagsService/CreateContactTagService";
-import ShowQueueService from "../QueueService/ShowQueueService";
 
 interface Session extends Client {
   id?: number;
@@ -236,11 +234,8 @@ const verifyQueue = async (
       ticketData: { queueId: queueId },
       ticketId: ticket.id
     });
-    const queue = await ShowQueueService(queueId)
-    const queueName = queue.name
-    await CreateContactTagService(contact, queueName)
+
     await DeleteTimeOutService(contact.storeId, contact.id)
-    await CreateOrUpdateTimeOutService(contact.storeId, contact.id);
   }
 };
 

@@ -1,15 +1,15 @@
-import Contact from "../../models/Contact";
 import ContactTags from "../../models/ContactTags";
 
 const CreateContactTagService = async (
-    contact: Contact,
-    tagName: string
+    contactId: number,
+    tagName: string,
+    storeId: number,
 ): Promise<ContactTags> => {
     const contactTag = await ContactTags.create({
 
-        contactId: contact.id,
+        contactId: contactId,
         tagName,
-        storeId: contact.storeId
+        storeId: storeId
     })
     return contactTag
 }
