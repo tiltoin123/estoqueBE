@@ -424,7 +424,7 @@ const handleMessage = async (
 
         let finishTimeout = moment(handleTimeOut?.createdAt).add(timeOutConfig.minutesDuration, 'm').toDate();
 
-        if (!handleTimeOut || finishTimeout < new Date()) {
+        if (!handleTimeOut || finishTimeout < new Date() && ticket.queue && !ticket.queue.storeAiId) {
           let messageToSend = await templateSelector(contact)
 
 
