@@ -63,6 +63,7 @@ const queueData = [
         greetingMessage: "Seja Bem vindo ao Canal do tio fábio, nossa inteligência artificial.",
         createdAt: new Date(),
         updatedAt: new Date(),
+        storeAiId: 1,
         storeId: 1,
     },
 ];

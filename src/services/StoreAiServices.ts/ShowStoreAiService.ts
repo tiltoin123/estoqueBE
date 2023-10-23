@@ -1,7 +1,7 @@
 import AppError from "../../errors/AppError";
 import StoreAi from "../../models/StoreAi";
 
-const ShowStoreAiService = async (id: string): Promise<StoreAi> => {
+const ShowStoreAiService = async (id: string | number): Promise<StoreAi> => {
 
     try {
         const storeAi = await StoreAi.findByPk(id)
