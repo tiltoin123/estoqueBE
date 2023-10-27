@@ -32,6 +32,10 @@ class Message extends Model<Message> {
   @Column
   fromMe: boolean;
 
+  @Default(false)
+  @Column
+  hasLink: boolean;
+
   @Column(DataType.TEXT)
   body: string;
 

@@ -13,6 +13,7 @@ interface MessageData {
   read?: boolean;
   mediaType?: string;
   mediaUrl?: string;
+  hasLink: boolean;
 }
 interface Request {
   messageData: MessageData;

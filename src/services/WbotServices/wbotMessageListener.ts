@@ -33,11 +33,9 @@ import CreateOrUpdateTimeOutService from "../TimeOutServices/CreateOrUpdateTimeO
 import GetTimeOutConfigService from "../TimeOutServices/GetTimeOutConfigService";
 import moment from "moment";
 import DeleteTimeOutService from "../TimeOutServices/DeleteTimeOutService";
-import ShowQueueService from "../QueueService/ShowQueueService";
 import ShowStoreService from "../StoreServices/ShowStoreService";
-import GetBuyerChoices from "../../helpers/GetBuyerChoices";
-import SendTemplateMedia from "../TemplateServices/SendTemplateMedia";
 import SendOpenAiQuery from "../../helpers/SendOpenAiQuery";
+
 
 interface Session extends Client {
   id?: number;
@@ -139,7 +137,8 @@ const verifyMediaMessage = async (
     read: msg.fromMe,
     mediaUrl: media.filename,
     mediaType: media.mimetype.split("/")[0],
-    quotedMsgId: quotedMsg?.id
+    quotedMsgId: quotedMsg?.id,
+    hasLink: msg.description && msg.title ? true : false
   };
   //console.log(media)
   await ticket.update({ lastMessage: msg.body || media.filename });
@@ -170,7 +169,8 @@ const verifyMessage = async (
     fromMe: msg.fromMe,
     mediaType: msg.type,
     read: msg.fromMe,
-    quotedMsgId: quotedMsg?.id
+    quotedMsgId: quotedMsg?.id,
+    hasLink: msg.description && msg.title ? true : false
   };
 
   await ticket.update({ lastMessage: msg.type === "location" ? msg.location.description ? "Localization - " + msg.location.description.split('\\n')[0] : "Localization" : msg.body });
@@ -200,7 +200,8 @@ const verifyMessageSent = async (
     fromMe: msg.fromMe,
     mediaType: msg.type,
     read: msg.fromMe,
-    quotedMsgId: quotedMsg?.id
+    quotedMsgId: quotedMsg?.id,
+    hasLink: msg.description && msg.title ? true : false
   };
 
   await ticket.update({ lastMessage: msg.type === "location" ? msg.location.description ? "Localization - " + msg.location.description.split('\\n')[0] : "Localization" : msg.body });
@@ -300,6 +301,15 @@ const verifyContactFullName = async (msg: WbotMessage, contact: Contact): Promis
   return contactWFullName;
 };
 
+/* const skipChatBot = async (wbot: Session, msg: WbotMessage, ticket: Ticket, contact: Contact): Promise<any> => {
+  if (!msg.fromMe && msg.description && msg.title) {
+    const fullName = await GetContactFullNameService(ticket.contactId)
+    if (!fullName) {
+    }
+    await verifyQueue(wbot, ticket, null, contact)
+  }
+} */
+
 const verifyContactSelectedChoices = async (msg: WbotMessage, contact: Contact) => {
   // 1-2  https://www.imobiliariafabioliporoni.com.br/comprar/terreno/ordem-valor/resultado-crescente/quantidade-12/
   // 2-2  https://www.imobiliariafabioliporoni.com.br/comprar/apartamento/ordem-valor/resultado-crescente/quantidade-12/
@@ -346,7 +356,6 @@ const handleMessage = async (
     let groupContact: Contact | undefined;
 
     if (msg.fromMe) {
-
       if (/\u200e/.test(msg.body[0])) return;
 
       if (!msg.hasMedia && msg.type !== "location" && msg.type !== "chat" && msg.type !== "vcard") return;
@@ -407,7 +416,7 @@ const handleMessage = async (
 
       const lastSentMessage = await GetLastMessageSent(contact)
 
-      if (lastSentMessage?.templateId === 1 && msg.type === "chat") {
+      if (lastSentMessage?.templateId === 1 || lastSentMessage?.templateId === 18 && msg.type === "chat") {
         await verifyContactFullName(msg, contact)
       }
       if (ticket.queue && ticket.queue.storeAiId) {
@@ -448,10 +457,12 @@ const handleMessage = async (
     }
 
     if (msg.fromMe && ticket.status === "open") {
+
       verifyMessageSent(msg, ticket, contact, 1, storeId)
     }
 
     if (!msg.fromMe && ticket.status === "open") {
+
       verifyMessage(msg, ticket, contact, storeId)
     }
     if (msg.hasMedia) {

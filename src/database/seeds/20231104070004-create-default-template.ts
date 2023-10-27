@@ -47,8 +47,7 @@ module.exports = {
                 {
                     id: 7,
                     message: "Agradecemos por compartilhar essas informações conosco! Já estamos dando prioridade à sua solicitação e encaminhamos para a equipe responsável." +
-                        " Se estiver fora do horário comercial, fique tranquilo! Iremos atendê-lo o mais rápido possível ao retornarmos. Muito obrigado pela compreensão! 😊\n" +
-                        "https://www.imobiliariafabioliporoni.com.br/comprar",
+                        " Se estiver fora do horário comercial, fique tranquilo! Iremos atendê-lo o mais rápido possível ao retornarmos. Muito obrigado pela compreensão! 😊",
                     lastMessage: 4,
                     condition: "2",
                     queueId: 1,
@@ -57,8 +56,7 @@ module.exports = {
                 {
                     id: 8,
                     message: "Agradecemos por compartilhar essas informações conosco! Já estamos dando prioridade à sua solicitação e encaminhamos para a equipe responsável." +
-                        " Se estiver fora do horário comercial, fique tranquilo! Iremos atendê-lo o mais rápido possível ao retornarmos. Muito obrigado pela compreensão! 😊\n" +
-                        "https://www.imobiliariafabioliporoni.com.br/comprar",
+                        " Se estiver fora do horário comercial, fique tranquilo! Iremos atendê-lo o mais rápido possível ao retornarmos. Muito obrigado pela compreensão! 😊",
                     lastMessage: 6,
                     queueId: 1,
                     storeId: 1
@@ -136,7 +134,20 @@ module.exports = {
                     condition: "8",
                     queueId: 8,
                     storeId: 1
-                }
+                },
+                {
+                    id: 18,
+                    message: "Oi! Tudo bem? Aqui é da Imobiliária Dr. Fábio Liporoni. Muito obrigado por entrar em contato conosco. 😊 Poderia nos dizer seu nome completo, por favor?",
+                    storeId: 1
+                },
+                {
+                    id: 19,
+                    message: "Agradecemos por compartilhar essas informações conosco! Já estamos dando prioridade à sua solicitação e encaminhamos para a equipe responsável." +
+                        " Se estiver fora do horário comercial, fique tranquilo! Iremos atendê-lo o mais rápido possível ao retornarmos. Muito obrigado pela compreensão! 😊",
+                    lastMessage: 18,
+                    queueId: 1,
+                    storeId: 1
+                },
             ],
             {}
         );
