@@ -7,6 +7,9 @@ const ListTemplateControlsService = async (templateId: number | null): Promise<T
             where: {
                 templateId,
             },
+            order: [
+                ['choice', 'ASC']
+            ],
         });
 
         return templateItems;
