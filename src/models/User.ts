@@ -18,10 +18,6 @@ import {
   Unique
 } from "sequelize-typescript";
 import { hash, compare } from "bcryptjs";
-import Ticket from "./Ticket";
-import Queue from "./Queue";
-import UserQueue from "./UserQueue";
-import Whatsapp from "./Whatsapp";
 import Store from "./Stores";
 
 @Table
@@ -47,10 +43,6 @@ class User extends Model<User> {
   @Column
   passwordHash: string;
 
-  @Unique
-  @Column
-  confirmationToken: string;
-
   @Default(0)
   @Column
   tokenVersion: number;
@@ -59,24 +51,12 @@ class User extends Model<User> {
   @Column
   profile: string;
 
-  @ForeignKey(() => Whatsapp)
-  @Column
-  whatsappId: number;
-
-  @BelongsTo(() => Whatsapp)
-  whatsapp: Whatsapp;
 
   @CreatedAt
   createdAt: Date;
 
   @UpdatedAt
   updatedAt: Date;
-
-  @HasMany(() => Ticket)
-  tickets: Ticket[];
-
-  @BelongsToMany(() => Queue, () => UserQueue)
-  queues: Queue[];
 
   @ForeignKey(() => Store)
   @Column

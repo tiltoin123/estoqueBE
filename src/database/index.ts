@@ -1,23 +1,10 @@
 import { Sequelize } from "sequelize-typescript";
 import User from "../models/User";
 import Setting from "../models/Setting";
-import Contact from "../models/Contact";
-import Ticket from "../models/Ticket";
-import Whatsapp from "../models/Whatsapp";
-import ContactCustomField from "../models/ContactCustomField";
-import Message from "../models/Message";
-import Queue from "../models/Queue";
-import WhatsappQueue from "../models/WhatsappQueue";
-import UserQueue from "../models/UserQueue";
-import QuickAnswer from "../models/QuickAnswer";
-import Template from "../models/Template";
 import Store from "../models/Stores";
-import TemplateControls from "../models/TemplateControls";
-import TimeOutConfig from "../models/TimeOutConfig";
-import TimeOut from "../models/TimeOut";
-import ContactTags from "../models/ContactTags";
-import StoreAi from "../models/StoreAi";
-import StoreLinks from "../models/StoreLink";
+import Suppliers from "../models/Suppliers";
+import Products from "../models/Products";
+
 
 // eslint-disable-next-line
 const dbConfig = require("../config/database");
@@ -27,24 +14,10 @@ const sequelize = new Sequelize(dbConfig);
 
 const models = [
   User,
-  Contact,
-  Ticket,
-  Message,
-  Whatsapp,
-  ContactCustomField,
-  Setting,
-  Queue,
-  WhatsappQueue,
-  UserQueue,
-  QuickAnswer,
-  Template,
   Store,
-  TemplateControls,
-  TimeOutConfig,
-  TimeOut,
-  ContactTags,
-  StoreAi,
-  StoreLinks
+  Setting,
+  Suppliers,
+  Products
 ];
 
 sequelize.addModels(models);

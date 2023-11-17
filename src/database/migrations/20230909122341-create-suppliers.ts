@@ -2,22 +2,40 @@ import { QueryInterface, DataTypes } from "sequelize";
 
 module.exports = {
     up: (queryInterface: QueryInterface) => {
-        return queryInterface.createTable("Stores", {
+        return queryInterface.createTable("Suppliers", {
             id: {
                 type: DataTypes.INTEGER,
                 autoIncrement: true,
                 primaryKey: true,
                 allowNull: false
             },
-            name: {
+            cnpj: {
+                type: DataTypes.STRING,
+                allowNull: false
+            },
+            razaoSocial: {
+                type: DataTypes.STRING,
+                allowNull: false
+            },
+            nomeFantasia: {
                 type: DataTypes.STRING,
                 allowNull: false,
-                unique: true
+            },
+            tipoJur: {
+                type: DataTypes.STRING,
+                allowNull: false
+            },
+            endereco: {
+                type: DataTypes.STRING,
+                allowNull: false
             },
             email: {
                 type: DataTypes.STRING,
-                allowNull: false,
-                unique: true
+                allowNull: false
+            },
+            telefone: {
+                type: DataTypes.STRING,
+                allowNull: false
             },
             createdAt: {
                 type: DataTypes.DATE,
@@ -31,6 +49,6 @@ module.exports = {
     },
 
     down: (queryInterface: QueryInterface) => {
-        return queryInterface.dropTable("Stores");
+        return queryInterface.dropTable("Users");
     }
 };

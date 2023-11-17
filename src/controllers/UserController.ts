@@ -29,18 +29,9 @@ export const index = async (req: Request, res: Response): Promise<Response> => {
 };
 
 export const store = async (req: Request, res: Response): Promise<Response> => {
-  const { email, password, name, profile, queueIds, whatsappId, storeName, storeSite } = req.body;
+  const { email, password, name, profile, storeName } = req.body;
 
-
-  if (
-    req.url === "/signup" &&
-    (await CheckSettingsHelper("userCreation")) === "disabled"
-  ) {
-    throw new AppError("ERR_USER_CREATION_DISABLED", 403);
-  } else if (req.url !== "/signup" && req.user.profile !== "admin") {
-    throw new AppError("ERR_NO_PERMISSION", 403);
-  }
-  const store = await CreateStoreService({ storeName, email, storeSite })
+  const store = await CreateStoreService({ storeName, email })
   const storeId = store.storeId
   const user = await CreateUserService({
     storeId,
@@ -48,8 +39,6 @@ export const store = async (req: Request, res: Response): Promise<Response> => {
     password,
     name,
     profile,
-    queueIds,
-    whatsappId
   });
 
   const io = getIO();

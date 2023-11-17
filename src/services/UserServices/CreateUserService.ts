@@ -10,9 +10,7 @@ interface Request {
   email: string;
   password: string;
   name: string;
-  queueIds?: number[];
   profile?: string;
-  whatsappId?: number;
 }
 
 interface Response {
@@ -27,11 +25,8 @@ const CreateUserService = async ({
   email,
   password,
   name,
-  queueIds = [],
   profile = "admin",
-  whatsappId
 }: Request): Promise<Response> => {
-  const confirmationToken = crypto.randomBytes(20).toString('hex')
   const schema = Yup.object().shape({
     name: Yup.string().required().min(2),
     email: Yup.string()
@@ -61,20 +56,13 @@ const CreateUserService = async ({
     {
       storeId,
       email,
-      confirmationToken,
       password,
       name,
       profile,
-      whatsappId: whatsappId ? whatsappId : null
     },
-    { include: ["queues", "whatsapp"] }
   );
 
-  await user.$set("queues", queueIds);
-
   await user.reload();
-
-  await sendEmail(user.email, user.confirmationToken)
 
   return SerializeUser(user);
 };
