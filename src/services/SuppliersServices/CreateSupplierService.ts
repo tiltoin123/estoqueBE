@@ -55,8 +55,7 @@ const CreateSupplierService = async ({
                     });
                     return !emailExists;
                 }
-            ),
-        password: Yup.string().required().min(5)
+            )
     });
 
     if (isCnpjValid) {
